@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useMemo, useCallback, useState } from 'react'
 import { Provider, connect} from 'react-redux'
 import path from 'path'
 import electron from 'electron'
-const { ipcRenderer } = electron
-const remote = require('@electron/remote')
+const { ipcRenderer, webFrame, remote } = electron
+const { app } = remote
 import KeyHandler from './../KeyHandler'
 import CameraPanelInspector from './../CameraPanelInspector'
 import CamerasInspector from './../CamerasInspector'
@@ -84,12 +84,12 @@ const Editor = React.memo(({
   }, [])
 
   useEffect(() => {
-    remote.getCurrentWindow().on('resize', resizeScale)
+    electron.remote.getCurrentWindow().on('resize', resizeScale)
     ipcRenderer.on('shot-generator:menu:view:fps-meter', toggleStats)
     ipcRenderer.on('shot-generator:menu:view:scale-ui-by', scaleBy)
     ipcRenderer.on('shot-generator:menu:view:scale-ui-reset', setScale)
     return () => {
-      remote.getCurrentWindow().off('resize', resizeScale)
+      electron.remote.getCurrentWindow().off('resize', resizeScale)
       ipcRenderer.off('shot-generator:menu:view:fps-meter', toggleStats)
       ipcRenderer.off('shot-generator:menu:view:scale-ui-by', scaleBy)
       ipcRenderer.off('shot-generator:menu:view:scale-ui-reset', setScale)

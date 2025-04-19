@@ -1,10 +1,9 @@
-const {ipcRenderer, shell} = require('electron')
-const remote = require('@electron/remote')
+const {ipcRenderer, shell, remote} = require('electron')
 const path = require('path')
 const moment = require('moment')
 const menu = require('../menu')
 const sfx = require('../wonderunit-sound')
-const prefsModule = require('@electron/remote').require('./prefs')
+const prefsModule = require('electron').remote.require('./prefs')
 const log = require('../shared/storyboarder-electron-log')
 const pkg = require('../../../package.json')
 
@@ -93,7 +92,51 @@ let updateRecentDocuments = () => {
       filename = filename[filename.length-1]
       html.push(`<h2>${recentDocument.title}</h2>`)
 
-      let lastUpdated = moment(recentDocument.time).fromNow().toUpperCase()
+      //let lastUpdated = moment(recentDocument.time).fromNow().toUpperCase()
+      //这里直接计算时间差, 再翻译为中文
+      let now = new Date();
+      let sjc = ((now.valueOf() - recentDocument.time) / 1000).toFixed(0);
+      let lastUpdate;
+      console.log(sjc);
+      if(sjc < 60){
+        lastUpdate = "刚刚"
+      }
+      else if(sjc >= 60 && sjc < 3600){
+        lastUpdate = (sjc / 60).toFixed(0) + "分钟前";
+      }
+      else if(sjc >= 3600 && sjc < 86400){
+        lastUpdate = (sjc / 3600).toFixed(0) + "小时前";
+      }
+      else if(sjc >= 86400 && sjc < 172800){
+        lastUpdate = "昨天";
+      }
+      else if(sjc >= 172800 && sjc < 259200){
+        lastUpdate = "前天";
+      }
+      else if(sjc >= 259200 && sjc < 2592000){
+        lastUpdate = (sjc / 86400).toFixed(0) + "天前";
+      }
+      else if(sjc >= 2592000 && sjc < 5184000){
+        lastUpdate = "上个月前";
+      }
+      else if(sjc >= 5184000 && sjc < 31104000){
+        lastUpdate = (sjc / 2592000).toFixed(0) + "个月前";
+      }
+      else if(sjc >= 31104000 && sjc < 62208000){
+        lastUpdate = "去年";
+      }
+      else if(sjc >= 62208000 && sjc < 93312000){
+        lastUpdate = "前年";
+      }
+      else if(sjc >= 93312000){
+        lastUpdate = (sjc / 31104000).toFixed(0) + "年前";
+      }
+
+      //最后码上更新日期
+      let date = new Date(recentDocument.time);
+      date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+      lastUpdated = date + " | " + lastUpdate;
+      
       html.push(lastUpdated) // `// ${util.msToTime(recentDocument.totalMovieTime)} / ${recentDocument.totalPageCount} PAGES / ${String(recentDocument.totalWordCount).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} WORDS`)
 
       html.push('</div></div>')

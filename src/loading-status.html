@@ -47,8 +47,8 @@
   <body>
 
     <div>
-      <div class="title">Loading <span class="filename"></span></div>
-      <div class="messages">Initializing …</div>
+      <div class="title">加载 <span class="filename"></span></div>
+      <div class="messages">初始化…</div>
     </div>
 
   </body>
@@ -60,16 +60,33 @@
     const messagesEl = document.querySelector('.messages')
 
     const params = (new URL(document.location)).searchParams
-    let title = 'Loading ' + util.truncateMiddle(params.get('name'))
+    let title = '加载 ' + util.truncateMiddle(params.get('name'))
     titleEl.textContent = title
     document.title = title
 
     ipcRenderer.on('log', (event, opt) => {
       if (opt.type === 'progress') {
-        messagesEl.textContent = opt.message + ' …'
+      	//ipc通信不好翻译, 直接替换好了
+      	//不用 if 了, 直接用状态机不挺好的嘛~ 
+      	let message = ""
+      	switch(opt.message){
+      		case "Loading User Interface":
+      			//message = "准备用户界面";
+      			messagesEl.textContent = "准备用户界面…"
+      			break;
+      		case "Rendering User Interface":
+      			//message = "加载用户界面";
+      			messagesEl.textContent = "加载用户界面…"
+      			break;
+      		case "Preparing to display":
+      			//message = "完成喽~~~";
+      			messagesEl.textContent = "欢迎回来! "
+      			break;
+      	}
+        //messagesEl.textContent = message + '…'
       }
       if (opt.type === 'error') {
-        messagesEl.textContent = '⚠ ' + opt.message
+        messagesEl.textContent = 'Oops: ' + opt.message
       }
     })
   </script>

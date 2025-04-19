@@ -54,10 +54,9 @@ const show = async (onComplete) => {
       allowRunningInsecureContent: true,
       experimentalFeatures: true,
       backgroundThrottling: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  require('@electron/remote/main').enable(win.webContents)
 
   // via https://github.com/electron/electron/blob/master/docs/api/web-contents.md#event-will-prevent-unload
   //     https://github.com/electron/electron/pull/9331

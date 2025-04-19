@@ -1,10 +1,11 @@
-require('electron-redux/preload')
 var os = require('os')
 
 const { pressed, findMatchingCommandsByKeys } = require('../utils/keytracker')
 
+const { getInitialStateRenderer } = require('electron-redux')
 const configureStore = require('../shared/store/configureStore')
-const store = configureStore()
+
+const store = configureStore(getInitialStateRenderer(), 'renderer')
 
 const capitalizeSingleLetters = keystroke => keystroke.split('+').map(k => k.length === 1 ? k.toUpperCase() : k).join('+')
 

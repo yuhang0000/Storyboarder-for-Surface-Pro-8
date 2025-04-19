@@ -60,8 +60,7 @@ const init = shouldEnable => {
       cd4: os.release(),
       cd5: os.totalmem(),
       cd6: os.cpus().length,
-      // Apple Silicon does not report os.cpus() in Electron 11
-      cd7: os.cpus()[0]?.speed,
+      cd7: os.cpus()[0].speed,
     }, uuid)
       .catch(_handleError)
   })

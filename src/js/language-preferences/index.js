@@ -1,6 +1,5 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react'
-import electron, { ipcRenderer } from 'electron'
-const remote = require('@electron/remote')
+import Electron, { ipcRenderer, remote } from 'electron'
 import { Math } from 'three'
 const {dialog} = remote
 import ItemList from './ItemList'
@@ -9,7 +8,7 @@ import path from 'path'
 import JSONEditor from './JsonEditor/JsonEditor';
 import Modal from '../shot-generator/components/Modal'
 import {settings} from '../services/language.config'
-const electronApp = electron.app ? electron.app : remote.app
+const electronApp = Electron.app ? Electron.app : Electron.remote.app
 const userDataPath = electronApp.getPath('userData')
 const LanguagePreferences = React.memo(() => {
     const [selectedJson, selectJson] = useState({})

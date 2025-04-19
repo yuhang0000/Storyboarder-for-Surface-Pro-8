@@ -1,5 +1,3 @@
-const remoteMain = require('@electron/remote/main')
-remoteMain.initialize()
 const {app, ipcMain, BrowserWindow, dialog, powerSaveBlocker} = electron = require('electron')
 
 const fs = require('fs-extra')
@@ -10,13 +8,14 @@ const chokidar = require('chokidar')
 const os = require('os')
 const log = require('./shared/storyboarder-electron-log')
 const fileSystem = require('fs')
-const EventEmitter = require('events')
 
 const prefModule = require('./prefs')
 prefModule.init(path.join(app.getPath('userData'), 'pref.json'))
 
 
 const configureStore = require('./shared/store/configureStore')
+const observeStore = require('./shared/helpers/observeStore')
+const actions = require('./shared/actions')
 const defaultKeyMap = require('./shared/helpers/defaultKeyMap')
 
 const analytics = require('./analytics')
@@ -33,8 +32,6 @@ const MobileServer = require('./express-app/app')
 const preferencesUI = require('./windows/preferences')()
 const registration = require('./windows/registration/main')
 const shotGeneratorWindow = require('./windows/shot-generator/main')
-const printProject = require('./windows/print-project/main')
-const printWorksheet = require('./windows/print-worksheet/main')
 
 const JWT = require('jsonwebtoken')
 
@@ -45,31 +42,8 @@ const autoUpdater = require('./auto-updater')
 const LanguagePreferencesWindow = require('./windows/language-preferences/main')
 //https://github.com/luiseduardobrito/sample-chat-electron
 
-//
-//
-// Menu
-// 
-const createMenu = require('./main/menu')
-const menuBus = new EventEmitter()
 
-/*
-TODO
-used by license registration, which is disabled currently
-see: windows/registration
-auth.json can be saved/loaded, e.g.:
-
-    const observeStore = require('./shared/helpers/observeStore')
-    const throttle = require('lodash.throttle')
-    const authStorage = require('./shared/store/authStorage')
-    const persistedState = authStorage.loadState()
-    const store = configureStore({ ...persistedState })
-    observeStore(
-      store,
-      state => state.auth,
-      throttle(() => authStorage.saveState({ auth: store.getState().auth }), 5000)
-    )
-*/
-const store = configureStore()
+const store = configureStore({}, 'main')
 
 
 if (isDev) {
@@ -87,6 +61,7 @@ let welcomeWindow
 let newWindow
 
 let mainWindow
+let printWindow
 let sketchWindow
 let keyCommandWindow
 
@@ -177,11 +152,9 @@ app.on('ready', async () => {
 
 
 
+
   languageSettings.setSettings(settings)
   //TODO(): Check if files of custom languages exist
-
-
-
   // load key map
   const keymapPath = path.join(app.getPath('userData'), 'keymap.json')
   let payload = {}
@@ -313,16 +286,6 @@ app.on('ready', async () => {
 
   await attemptLicenseVerification()
 
-
-
-  // setup the menu
-  createMenu({
-    store,
-    send: (event, ...rest) => menuBus.emit(event, event, ...rest)
-  })
-
-
-
   // open the welcome window when the app loads up first
   openWelcomeWindow()
 
@@ -381,10 +344,9 @@ let openKeyCommandWindow = () => {
     titleBarStyle: 'hiddenInset',
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(keyCommandWindow.webContents)
   keyCommandWindow.loadURL(`file://${__dirname}/../keycommand-window.html`)
   keyCommandWindow.once('ready-to-show', () => {
     setTimeout(() => keyCommandWindow.show(), 250) // wait for DOM
@@ -418,10 +380,9 @@ let openNewWindow = () => {
       modal: true,
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        enableRemoteModule: true
       }
     })
-    remoteMain.enable(newWindow.webContents)
     newWindow.loadURL(`file://${__dirname}/../new.html`)
     newWindow.once('ready-to-show', () => {
       newWindow.show()
@@ -446,10 +407,9 @@ let openWelcomeWindow = () => {
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(welcomeWindow.webContents)
   welcomeWindow.loadURL(`file://${__dirname}/../welcome.html`)
 
   newWindow = new BrowserWindow({
@@ -462,10 +422,9 @@ let openWelcomeWindow = () => {
     modal: true,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(newWindow.webContents)
   newWindow.loadURL(`file://${__dirname}/../new.html`)
 
   let recentDocumentsCopy
@@ -701,6 +660,25 @@ let importImagesDialogue = (shouldReplace = false) => {
   }).catch(err => {
     log.error(err)
   })
+}
+
+let importWorksheetDialogue = () => {
+  dialog.showOpenDialog(
+    {
+      title:"Import Worksheet",
+      filters:[
+        {name: 'Images', extensions: ['png', 'jpg', 'jpeg']},
+      ],
+      properties: [
+        "openFile",
+      ]
+    }
+  ).then(({ filePaths }) => {
+    if (filePaths.length) {
+      mainWindow.webContents.send('importWorksheets', filePaths)
+    }
+  })
+  .catch(err => log.error(err))
 }
 
 const processFdxData = fdxObj => {
@@ -1031,10 +1009,9 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
       devTools: true,
       plugins: true,
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(mainWindow.webContents)
 
   let projectName = path.basename(filename, path.extname(filename))
   loadingStatusWindow = new BrowserWindow({
@@ -1046,10 +1023,9 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
     resizable: isDev ? true : false,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(loadingStatusWindow.webContents)
   loadingStatusWindow.loadURL(`file://${__dirname}/../loading-status.html?name=${encodeURIComponent(projectName)}`)
   loadingStatusWindow.once('ready-to-show', () => {
     loadingStatusWindow.show()
@@ -1228,103 +1204,103 @@ let attemptLicenseVerification = async () => {
 // Main Window
 //////////////////
 
-menuBus.on('newBoard', (e, arg)=> {
+ipcMain.on('newBoard', (e, arg)=> {
   mainWindow.webContents.send('newBoard', arg)
 })
 
-menuBus.on('deleteBoards', (e, arg)=> {
+ipcMain.on('deleteBoards', (e, arg)=> {
   mainWindow.webContents.send('deleteBoards', arg)
 })
 
-menuBus.on('duplicateBoard', (e, arg)=> {
+ipcMain.on('duplicateBoard', (e, arg)=> {
   mainWindow.webContents.send('duplicateBoard')
 })
 
-menuBus.on('reorderBoardsLeft', (e, arg)=> {
+ipcMain.on('reorderBoardsLeft', (e, arg)=> {
   mainWindow.webContents.send('reorderBoardsLeft')
 })
 
-menuBus.on('reorderBoardsRight', (e, arg)=> {
+ipcMain.on('reorderBoardsRight', (e, arg)=> {
   mainWindow.webContents.send('reorderBoardsRight')
 })
 
-menuBus.on('togglePlayback', (e, arg)=> {
+ipcMain.on('togglePlayback', (e, arg)=> {
   mainWindow.webContents.send('togglePlayback')
 })
 
-menuBus.on('openInEditor', (e, arg)=> {
+ipcMain.on('openInEditor', (e, arg)=> {
   mainWindow.webContents.send('openInEditor')
 })
 
-menuBus.on('goPreviousBoard', (e, arg)=> {
+ipcMain.on('goPreviousBoard', (e, arg)=> {
   mainWindow.webContents.send('goPreviousBoard')
 })
 
-menuBus.on('goNextBoard', (e, arg)=> {
+ipcMain.on('goNextBoard', (e, arg)=> {
   mainWindow.webContents.send('goNextBoard')
 })
 
-menuBus.on('previousScene', (e, arg)=> {
+ipcMain.on('previousScene', (e, arg)=> {
   mainWindow.webContents.send('previousScene')
 })
 
-menuBus.on('nextScene', (e, arg)=> {
+ipcMain.on('nextScene', (e, arg)=> {
   mainWindow.webContents.send('nextScene')
 })
 
-menuBus.on('copy', (e, arg)=> {
+ipcMain.on('copy', (e, arg)=> {
   mainWindow.webContents.send('copy')
 })
 
-menuBus.on('paste', (e, arg)=> {
+ipcMain.on('paste', (e, arg)=> {
   mainWindow.webContents.send('paste')
 })
 
-menuBus.on('paste-replace', () => {
+ipcMain.on('paste-replace', () => {
   mainWindow.webContents.send('paste-replace')
 })
 
 /// TOOLS
 
-menuBus.on('undo', (e, arg)=> {
+ipcMain.on('undo', (e, arg)=> {
   mainWindow.webContents.send('undo')
 })
 
 
-menuBus.on('redo', (e, arg)=> {
+ipcMain.on('redo', (e, arg)=> {
   mainWindow.webContents.send('redo')
 })
 
-menuBus.on('setTool', (e, arg) =>
+ipcMain.on('setTool', (e, arg) =>
   mainWindow.webContents.send('setTool', arg))
 
-menuBus.on('useColor', (e, arg)=> {
+ipcMain.on('useColor', (e, arg)=> {
   mainWindow.webContents.send('useColor', arg)
 })
 
-menuBus.on('clear', (e, arg) => {
+ipcMain.on('clear', (e, arg) => {
   mainWindow.webContents.send('clear', arg)
 })
 
-menuBus.on('brushSize', (e, arg)=> {
+ipcMain.on('brushSize', (e, arg)=> {
   mainWindow.webContents.send('brushSize', arg)
 })
 
-menuBus.on('flipBoard', (e, arg)=> {
+ipcMain.on('flipBoard', (e, arg)=> {
   mainWindow.webContents.send('flipBoard', arg)
 })
 
 /// VIEW
 
-menuBus.on('cycleViewMode', (e, arg)=> {
+ipcMain.on('cycleViewMode', (e, arg)=> {
   mainWindow.webContents.send('cycleViewMode', arg)
 })
 
-menuBus.on('toggleCaptions', (e, arg)=> {
+ipcMain.on('toggleCaptions', (e, arg)=> {
   mainWindow.webContents.send('toggleCaptions', arg)
 })
 
-menuBus.on('toggleTimeline', () =>
+ipcMain.on('toggleTimeline', () =>
   mainWindow.webContents.send('toggleTimeline'))
 
 //////////////////
@@ -1336,23 +1312,14 @@ ipcMain.on('openFile', (e, arg)=> {
   openFile(arg)
 })
 
+ipcMain.on('openDialogue', (e, arg) => {
+  openDialogue()
+})
 
-
-// openDialogue (ipc and menu)
-ipcMain.on('openDialogue', () => openDialogue())
-menuBus.on('openDialogue', () => openDialogue())
-
-// importImagesDialogue (ipc and menu)
 ipcMain.on('importImagesDialogue', (e, arg) => {
   importImagesDialogue(arg)
   mainWindow.webContents.send('importNotification', arg)
 })
-menuBus.on('importImagesDialogue', (e, arg) => {
-  importImagesDialogue(arg)
-  mainWindow.webContents.send('importNotification', arg)
-})
-
-
 
 ipcMain.on('createNew', (e, aspectRatio) => {
   newWindow.hide()
@@ -1399,14 +1366,14 @@ ipcMain.on('goNextScene', (event, arg)=> {
   mainWindow.webContents.send('goNextScene')
 })
 
-menuBus.on('toggleSpeaking', (event, arg)=> {
+ipcMain.on('toggleSpeaking', (event, arg)=> {
   mainWindow.webContents.send('toggleSpeaking')
 })
 
-menuBus.on('stopAllSounds', event =>
+ipcMain.on('stopAllSounds', event =>
   mainWindow.webContents.send('stopAllSounds'))
 
-menuBus.on('addAudioFile', event =>
+ipcMain.on('addAudioFile', event =>
   mainWindow.webContents.send('addAudioFile'))
 
 ipcMain.on('playsfx', (event, arg)=> {
@@ -1423,58 +1390,73 @@ ipcMain.on('textInputMode', (event, arg)=> {
   mainWindow.webContents.send('textInputMode', arg)
 })
 
-menuBus.on('preferences', (event, arg) => {
+ipcMain.on('preferences', (event, arg) => {
   preferencesUI.show()
   analytics.screenView('preferences')
 })
 
-menuBus.on('toggleGuide', (event, arg) => {
+ipcMain.on('toggleGuide', (event, arg) => {
   mainWindow.webContents.send('toggleGuide', arg)
 })
 
-menuBus.on('toggleOnionSkin', event =>
+ipcMain.on('toggleOnionSkin', event =>
   mainWindow.webContents.send('toggleOnionSkin'))
 
-menuBus.on('toggleNewShot', (event, arg) => {
+ipcMain.on('toggleNewShot', (event, arg) => {
   mainWindow.webContents.send('toggleNewShot', arg)
 })
 
-menuBus.on('showTip', (event, arg) => {
+ipcMain.on('showTip', (event, arg) => {
   mainWindow.webContents.send('showTip', arg)
 })
 
-menuBus.on('exportAnimatedGif', (event, arg) => {
+ipcMain.on('exportAnimatedGif', (event, arg) => {
   mainWindow.webContents.send('exportAnimatedGif', arg)
 })
 
-menuBus.on('exportVideo', (event, arg) => {
+ipcMain.on('exportVideo', (event, arg) => {
   mainWindow.webContents.send('exportVideo', arg)
 })
 
-menuBus.on('exportFcp', (event, arg) => {
+ipcMain.on('exportFcp', (event, arg) => {
   mainWindow.webContents.send('exportFcp', arg)
 })
 
-menuBus.on('exportImages', (event, arg) => {
+ipcMain.on('exportImages', (event, arg) => {
   mainWindow.webContents.send('exportImages', arg)
 })
 
-menuBus.on('exportWeb', (event, arg) => {
+ipcMain.on('exportPDF', (event, arg) => {
+  mainWindow.webContents.send('exportPDF', arg)
+})
+
+ipcMain.on('exportWeb', (event, arg) => {
   mainWindow.webContents.send('exportWeb', arg)
 })
-menuBus.on('exportZIP', (event, arg) => {
+ipcMain.on('exportZIP', (event, arg) => {
   mainWindow.webContents.send('exportZIP', arg)
 })
 
-menuBus.on('exportCleanup', (event, arg) => {
+ipcMain.on('exportCleanup', (event, arg) => {
   mainWindow.webContents.send('exportCleanup', arg)
 })
 
-menuBus.on('save', (event, arg) => {
+ipcMain.on('printWorksheet', (event, arg) => {
+  //openPrintWindow()
+  mainWindow.webContents.send('printWorksheet', arg)
+})
+
+ipcMain.on('importWorksheets', (event, arg) => {
+  //openPrintWindow()
+  importWorksheetDialogue()
+  mainWindow.webContents.send('importNotification', arg)
+})
+
+ipcMain.on('save', (event, arg) => {
   mainWindow.webContents.send('save', arg)
 })
 
-menuBus.on('saveAs', (event, arg) => {
+ipcMain.on('saveAs', (event, arg) => {
   mainWindow.webContents.send('saveAs', arg)
 })
 
@@ -1482,7 +1464,7 @@ ipcMain.on('prefs:change', (event, arg) => {
   !mainWindow.isDestroyed() && mainWindow.webContents.send('prefs:change', arg)
 })
 
-menuBus.on('showKeyCommands', (event, arg) => {
+ipcMain.on('showKeyCommands', (event, arg) => {
   openKeyCommandWindow()
   analytics.screenView('key commands')
 })
@@ -1567,81 +1549,16 @@ ipcMain.on('openLanguagePreferences', (event) => {
   } else {
     LanguagePreferencesWindow.createWindow(() => {LanguagePreferencesWindow.reveal()})
   }
+  //openPrintWindow(PDFEXPORTPW, showPDFPrintWindow);
+  //ipcRenderer.send('analyticsEvent', 'Board', 'exportPDF')
 })
 
 
-
-// PDF Export
-menuBus.on('exportPDF', () => {
-  if (!mainWindow) return
-
-  printProject.show({ parent: mainWindow })
-  analytics.event('Board', 'show print window')
-})
-ipcMain.handle('exportPDF:getData', async () => {
-  if (!mainWindow) return
-
-  return await new Promise(resolve => {
-    ipcMain.once('exportPDF:getProjectData-response', (event, projectData) => {
-      resolve({
-        currentFilePath: currentFile,
-        projectData
-      })
-    })
-    mainWindow.webContents.send('exportPDF:getProjectData-request')
-  })
+ipcMain.on('exportPrintablePdf', (event, sourcePath, fileName) => {
+  mainWindow.webContents.send('exportPrintablePdf', sourcePath, fileName)
 })
 
-// Worksheet Export
-menuBus.on('printWorksheet', () => {
-  if (!mainWindow) return
-
-  printWorksheet.show({ parent: mainWindow })
-
-  analytics.event('Board', 'show print worksheet window')
-})
-ipcMain.handle('printWorksheet:getData', async () => {
-  if (!mainWindow) return
-
-  return await new Promise(resolve => {
-    ipcMain.once('printWorksheet:getProjectData-response', (event, projectData) => {
-      resolve({
-        currentFilePath: currentFile,
-        projectData
-      })
-    })
-    mainWindow.webContents.send('printWorksheet:getProjectData-request')
-  })
-})
-
-// Worksheet Import
-menuBus.on('importWorksheets', async (event, arg) => {
-  try {
-    let { filePaths } = await dialog.showOpenDialog({
-      title: 'Import Worksheet',
-      filters:[
-        { name: 'Images', extensions: ['png', 'jpg', 'jpeg'] },
-      ],
-      properties: [
-        'openFile',
-      ]
-    })
-
-    if (filePaths.length) {
-      mainWindow.webContents.send('importWorksheets', filePaths)
-      mainWindow.webContents.send('importNotification', arg)
-    }
-
-  } catch (err) {
-    log.error(err)
-  }
-})
-
-ipcMain.on('exportPrintableWorksheetPdf', (event, sourcePath) =>
-  mainWindow.webContents.send('exportPrintableWorksheetPdf', sourcePath)
-)
-
-menuBus.on('toggleAudition', (event) => {
+ipcMain.on('toggleAudition', (event) => {
   mainWindow.webContents.send('toggleAudition')
 })
 
@@ -1650,17 +1567,17 @@ ipcMain.on('signInSuccess', (event, response) => {
   mainWindow.webContents.send('signInSuccess', response)
 })
 
-menuBus.on('revealShotGenerator',
+ipcMain.on('revealShotGenerator',
   event => mainWindow.webContents.send('revealShotGenerator'))
 
-menuBus.on('zoomReset',
+ipcMain.on('zoomReset',
   event => mainWindow.webContents.send('zoomReset'))
-menuBus.on('scale-ui-by',
+ipcMain.on('scale-ui-by',
   (event, value) => mainWindow.webContents.send('scale-ui-by', value))
-menuBus.on('scale-ui-reset',
+ipcMain.on('scale-ui-reset',
   (event, value) => mainWindow.webContents.send('scale-ui-reset', value))
 
-menuBus.on('saveShot',
+ipcMain.on('saveShot',
   (event, data) => mainWindow.webContents.send('saveShot', data))
 ipcMain.on('insertShot',
   (event, data) => mainWindow.webContents.send('insertShot', data))
@@ -1735,10 +1652,4 @@ ipcMain.on('shot-generator:updateStore', (event, action) => {
   }
 })
 
-
-
-// ipc and menu
 ipcMain.on('registration:open', event => registration.show())
-menuBus.on('registration:open', event => registration.show())
-
-
