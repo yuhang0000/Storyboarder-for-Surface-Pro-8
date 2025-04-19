@@ -232,9 +232,9 @@ app.on('ready', async () => {
     if (!isDev && !app.isInApplicationsFolder()) {
       const { response } = await dialog.showMessageBox({
         type: 'question',
-        title: 'Move to Applications folder?',
-        message: 'Would you like to move Storyboarder to the Applications folder?',
-        buttons: ['Move to Applications', 'Do Not Move'],
+        title: '移动到程序安装文件夹?',
+        message: '要将故事板移到程序安装文件夹中吗?',
+        buttons: ['是', '否'],
         defaultId: 1
       })
 
@@ -246,7 +246,7 @@ app.on('ready', async () => {
           if (!didMove) {
             dialog.showMessageBox(null, {
               type: 'error',
-              message: 'Could not move to Applications folder'
+              message: '无法移动到程序安装文件夹里.'
             })
           }
         } catch (err) {
@@ -310,7 +310,7 @@ app.on('ready', async () => {
       } else {
         log.error('Could not load', filePath)
         dialog.showErrorBox(
-          'Could not load requested file',
+          '无法加载请求的文件',
           `Error loading ${filePath}`
         )
       }
@@ -483,7 +483,7 @@ let openFile = filepath => {
       if (err) {
         dialog.showMessageBox({
           type: 'error',
-          message: 'Could not open Final Draft file.\n' + error.message,
+          message: '无法打开 Final Draft 文件.\n' + error.message,
         })
         return
       }
@@ -492,7 +492,7 @@ let openFile = filepath => {
         if (err) {
           dialog.showMessageBox({
             type: 'error',
-            message: 'Could not parse Final Draft XML.\n' + error.message,
+            message: '无法解析 Final Draft XML.\n' + error.message,
           })
           return
         }
@@ -513,7 +513,7 @@ let openFile = filepath => {
           log.error(error)
           dialog.showMessageBox({
             type: 'error',
-            message: 'Could not parse Final Draft data.\n' + error.message
+            message: '无法解析 Final Draft 数据.\n' + error.message
           })
         }
       })
@@ -527,7 +527,7 @@ let openFile = filepath => {
       if (err) {
         dialog.showMessageBox({
           type: 'error',
-          message: 'Could not read Fountain script.\n' + err.message,
+          message: '无法读取 Fountain 脚本.\n' + err.message,
         })
         return
       }
@@ -540,7 +540,7 @@ let openFile = filepath => {
         log.error(error)
         dialog.showMessageBox({
           type: 'error',
-          message: 'Could not parse Fountain script.\n' + error.message,
+          message: '无法解析 Fountain 脚本.\n' + error.message,
         })
       }
     })
@@ -582,10 +582,11 @@ const findOrCreateProjectFolder = (scriptDataObject) => {
 
 let openDialogue = () => {
   dialog.showOpenDialog({
-    title: "Open Script or Storyboarder",
+    title: "打开脚本&故事板",
+    buttonlabel: "打开", //这里补上按钮标签
     filters:[
       {
-        name: 'Screenplay or Storyboarder',
+        name: '脚本或故事板',
         extensions: [
           'storyboarder',
           'fountain',
@@ -604,7 +605,8 @@ let openDialogue = () => {
 let importImagesDialogue = (shouldReplace = false) => {
   dialog.showOpenDialog(
     {
-      title:"Import Boards",
+      title:"导入图像",
+      buttonlabel: "打开", //这里补上按钮标签
       filters:[
         {name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'psd']},
       ],
@@ -665,7 +667,8 @@ let importImagesDialogue = (shouldReplace = false) => {
 let importWorksheetDialogue = () => {
   dialog.showOpenDialog(
     {
-      title:"Import Worksheet",
+      title:"导入工作表",
+      buttonlabel: "打开", //这里补上按钮标签
       filters:[
         {name: 'Images', extensions: ['png', 'jpg', 'jpeg']},
       ],
@@ -685,7 +688,7 @@ const processFdxData = fdxObj => {
   try {
     ensureFdxSceneIds(fdxObj)
   } catch (err) {
-    throw new Error('Could not add scene ids to Final Draft data.\n' + error.message)
+    throw new Error('不能将场景id添加到最终草案数据.\n' + error.message)
     return
   }
 
@@ -758,7 +761,7 @@ let processFountainData = (data, create, update) => {
         ? coll + 1
         : coll
   , 0)
-  if (scenesWithSceneNumbers === 0) throw new Error('Could not find any numbered scenes in this Fountain script.')
+  if (scenesWithSceneNumbers === 0) throw new Error('在此 Fountain 脚本中未找到任何编号的场景.')
 
   switch (scriptData[scriptData.length-1].type) {
     case 'section':
@@ -801,7 +804,7 @@ const onScriptFileChange = (eventType, filepath, stats) => {
       } catch (error) {
         dialog.showMessageBox({
           type: 'error',
-          message: 'Could not reload script.\n' + error.message
+          message: '无法加载脚本.\n' + error.message
         })
       }
 
@@ -811,7 +814,7 @@ const onScriptFileChange = (eventType, filepath, stats) => {
         if (err) {
           dialog.showMessageBox({
             type: 'error',
-            message: 'Could not parse Final Draft XML.\n' + error.message,
+            message: '无法解析 Final Draft XML.\n' + error.message,
           })
           return
         }
@@ -823,7 +826,7 @@ const onScriptFileChange = (eventType, filepath, stats) => {
         } catch (error) {
           dialog.showMessageBox({
             type: 'error',
-            message: 'Could not reload script.\n' + error.message
+            message: '无法加载脚本.\n' + error.message
           })
         }
       })
@@ -856,11 +859,11 @@ const ensureFdxSceneIds = fdxObj => {
 
     dialog.showMessageBox({
       type: 'info',
-      message: 'We added scene IDs to the Final Draft script',
-      detail: "Scene IDs are what we use to make sure we put the storyboards in the right place. " +
-              "If you have your script open in an editor, you should reload it. " +
-              "Also, you can change your script around as much as you want, "+
-              "but please don't change the scene IDs.",
+      message: '我们在 Final Draft 的脚本文档里中添加了场景id.',
+      detail: "场景id是我们用来确保我们把故事板放在正确的位置的标记. " +
+              "如果您在编辑器中打开脚本, 则应该重新加载它. " +
+              "此外, 你可以随心所欲地修改你的脚本, "+
+              "但请不要更改场景id.",
       buttons: ['OK']
     })
   }
@@ -872,8 +875,8 @@ const ensureFountainSceneIds = (filePath, data) => {
   if (sceneIdScript[1]) {
     dialog.showMessageBox({
       type: 'info',
-      message: 'We added scene IDs to your fountain script.',
-      detail: "Scene IDs are what we use to make sure we put the storyboards in the right place. If you have your script open in an editor, you should reload it. Also, you can change your script around as much as you want, but please don't change the scene IDs.",
+      message: '我们在 fountain 脚本中添加了场景id.',
+      detail: "场景id是我们用来确保我们把故事板放在正确的位置的标记. 如果您在编辑器中打开脚本, 则应该重新加载它. 此外, 你可以随心所欲地修改你的脚本, 但请不要更改场景id.",
       buttons: ['OK']
     })
 
@@ -908,8 +911,8 @@ const ensureFountainSceneIds = (filePath, data) => {
 const createAndLoadScene = async aspectRatio => {
   // if directory exists, showSaveDialog will prompt to confirm overwrite
   let { canceled, filePath } = await dialog.showSaveDialog({
-    title: "New Storyboard",
-    buttonLabel: "Create",
+    title: "创建新的故事板",
+    buttonLabel: "创建",
     defaultPath: app.getPath('documents'),
     options: {
       properties: [
@@ -931,7 +934,7 @@ const createAndLoadScene = async aspectRatio => {
       await trash(filePath)
     } else {
       dialog.showMessageBox(null, {
-        message: "Could not overwrite file " + path.basename(filePath) + ". Only folders can be overwritten."
+        message: "无法覆盖文件 " + path.basename(filePath) + ". 只有文件夹可以被覆盖。"
       })
       return
     }
@@ -1042,10 +1045,10 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
       }
     }
     dialog.showMessageBox({
-      title: 'Error',
+      title: 'Oops! ',
       type: 'error',
       message: message,
-      detail: 'In file: ' + source + '#' + lineno + ':' + colno
+      detail: '介个文件: ' + source + '#' + lineno + ':' + colno
     })
     log.error(message, source, lineno, colno)
     analytics.exception(message, source, lineno)
@@ -1072,9 +1075,9 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
   mainWindow.webContents.on('will-prevent-unload', event => {
     const choice = dialog.showMessageBoxSync({
       type: 'question',
-      buttons: ['Yes', 'No'],
-      title: 'Confirm',
-      message: 'Your Storyboarder file is not saved. Are you sure you want to close the workspace?'
+      buttons: ['是', '否'],
+      title: '提示',
+      message: '你的故事板尚未保存, 您确定要关闭工作区吗?'
     })
 
     const leave = (choice === 0)
@@ -1181,7 +1184,7 @@ let attemptLicenseVerification = async () => {
 
     } else {
       dialog.showMessageBox({
-        message: 'License key is no longer valid.'
+        message: '许可证密钥不再有效.'
       })
       log.info('Removing invalid license key at', licenseKeyPath)
       prefModule.revokeLicense()
