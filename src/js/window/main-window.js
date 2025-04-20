@@ -578,133 +578,136 @@ const commentOnLineMileage = (miles) => {
     //   sfx.playEffect('tool-pencil')
     //   break
     case 5:
-      message.push('5 line miles.')
+      message.push('5 英里.\n')
       otherMessages = [
-        "You should be done with your rough drawing.",
-        "You got the basic form down?",
-        "Are you sure this is the layout you want?",
-        "Let's get to cleaning this up!",
-        "Such great composition!",
-        "Oh. Now I can see what you're going for.",
-        "Let's wrap this one up.",
-        "Beautiful.",
-        "You make me proud.",
+        "你应该画完你的草图了...吧?",
+        "你应该吧大致的形状画出来了吧?",
+        "你确定这是你想要的布局吗?",
+        "让我们开始构思一下吧!",
+        "好棒!",
+        "哦, 我可能知道你想要画啥了.",
+        "让我们赶紧把这个给结束吧.",
+        "好美!",
+        "你让我感到骄傲.",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.playEffect('tool-light-pencil')
       break
     case 8:
-      message.push('8 line miles.')
+      message.push('8 英里.\n')
       otherMessages = [
-        "Let's finish this up!",
-        "Are you done yet?",
-        "We have so many other boards to do still...",
-        "Yes.. Very close to done.",
-        "Can we move on to the next drawing and come back to this one?",
-        "I think you need to pee.",
-        "Is it finished?",
-        "Yeah.. I'm gonna need you to come in this weekend and finish the rest of these boards.",
-        "Wrap it up!",
+        "不用紧张, 慢慢来处理细节吧.",
+        "哇, 你已经画完了吗!?",
+        "我们还有很多场景没画完...",
+        "是的.. 马上就要完成了!",
+        "我们能不能先画下一幅, 然后再来看这一幅?",
+        "先喝口水休息一下下.",
+        "难道, 要完成了?",
+        "我会为你加油.",
+        "我们加快点速度吧! ",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.playEffect('tool-brush')
       break
     case 10:
-      message.push('10 miles!')
+      message.push('10 英里!\n')
       otherMessages = [
-        "Let's finish this up!",
-        "Are you done yet?",
-        "Alright, I think this one is done.",
-        "Yes.. Very close to done. Actually, looks done to me.",
-        "Let's move on.",
-        "Remember, you're not making the next Moner Lisa.",
-        "Who do you think you are, Picaso?",
-        "Looks great! But let's not make it too great.",
-        "Sweet!",
+        "不用紧张, 慢工出细活.",
+        "欸, 你画完了吗!?",
+        "应该.. 马上就要完成了?",
+        "是的.. 非常接近完美. 事实上, 在我看来, 它已经是个不错的作品了.",
+        "不要停下来!",
+        "加油!",
+        "理解xx, 成为xx, 超越xx!",
+        "看起来不错!",
+        "好萌!",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.positive()
       break
     case 20:
-      message.push('20 miles!!!')
+      message.push('20 英里!!!\n')
       otherMessages = [
-        "This is done. Let's move on.",
-        "Woot. You're finished!",
-        "You're taking too long.",
-        "Come on buddy... put the pen down.",
-        "You know you're not burning that many more calories working this hard on this board.",
+        "不要停下来.",
+        "WoW, 你做到了!",
+        "这项工作确实花了不少时间呢.",
+        "也许... 先休息一下?",
+        "虽然在这块板子上工作很辛苦, 但这不仅仅是为了消耗卡路里, 更是为了创造美丽的艺术作品!",
         "YESSSS!!! BEAUTIFUL!!!!",
         "I LOVE IT!!!!",
-        "How did you learn to draw so well?",
+        "太棒了, 你是怎么做到的? 教我!",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.negative()
       break
     case 50:
-      message.push('50 miles!!!')
+      message.push('50 英里!!!\n')
       otherMessages = [
-        "Uhh.. I fell asleep. What did I miss?",
-        "Are you painting the sixteen chapel or something?",
-        "I'm waiting for your paint to dry.",
-        "Come on buddy... put the pen down. Let's go for a walk.",
-        "Why don't you tweet this masterpiece out?",
-        "Hey. This is like some sort of torture.",
-        "I thought it looked nice an hour ago.",
-        "How about starting a new board?",
+        "Uhh.. 刚才不小心打了个盹儿.. 等等, 我错过了什么?",
+        "这细节太棒了! 你是如何捕捉到这么多细节的?",
+        "看来你的作品还需要一点时间来沉淀, 慢慢来.",
+        "休息一下怎么样? 我们可以一起放松一会儿.",
+        "你为什么不在推特上发布这篇杰作呢?",
+        "看起来这个过程挺有挑战性的, 你是怎么坚持下来的?",
+        "WoW.",
+        "这个部分已经很棒了, 或许, 考虑画下一个分镜?",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.negative()
       break
     case 100:
-      message.push('100 miles!!!')
+      message.push('100 英里!!!\n')
       otherMessages = [
-        "Nope!!! I'm going to delete this board if you keep drawing. Just kidding. Or am I?",
-        "I FEEL ASLEEP.",
-        "Wake me up when you need me.",
-        "Dude. You remember you are storyboarding.",
-        "Let's go for a walk.",
-        "How many boards do we have left?",
-        "I thought it looked nice 2 hours ago.",
-        "How about starting a new board?",
-        "Post this one to twitter, it's a f*cking masterpiece.",
+        "WoW",
+        "感到疲劳的时候, 可以打下盹休息一下.",
+        "加油, 我看好你.",
+        "长时间画画对颈椎不好, 要不要休息一下?",
+        "让我们去散步吧.",
+        "我们来看看进度如何, 还有多少分镜需要完成呢?",
+        "越来越完美了!",
+        "或许可以考虑开始下一个场景了?",
+        "你可以考虑把这张发到推特上吧，我真的喜欢这件杰作.",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.error()
       break
     case 200:
-      message.push('200 miles!!!')
+      message.push('200 英里!!!\n')
       otherMessages = [
-        "Now you're just fucking with me.",
-        "I FEEL ASLEEP.",
-        "You haven't worked your wrist out this hard since you were 13.",
-        "I think your pen is going to break.",
+        "哇, 你是怎么做到的?",
+        "我感到有些疲倦.",
+        "许久没有取得这么大的进展了.",
+        "唔, 也过去有段时间了, 先检查手写笔还有没有电吧.",
+        "无论何时何地, 相信自己的能力. 每次挑战都是展示你才华的机会. 加油, 你的努力将会带来令人惊叹的结果.",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.error()
       break
     case 300:
-      message.push('300 miles!!!')
+      message.push('300 英里!!!\n')
       otherMessages = [
-        "I quit.",
-        "Imagine what I'll say at 1000 miles.",
-        "I'm going home.",
-        "I hate you.",
+        "加油!",
+        "虽然你可能还在追求完美的路上, 但请记住, 每个艺术家都需要休息来保持最佳状态. 也许.. 考虑一下短暂的休息吗? 它能帮助你回来时更有灵感哦!",
+        "我完全理解那种感觉，但你知道吗？从旁观者的角度来看，你的作品已经有了很大的进步。每一个细节都展现出了你的用心和才华.",
+        "别忘了, 艺术不仅仅是终点, 更是旅程. 享受这个过程, 你会发现每一次尝试都是成长的机会.",
+        "zzz",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.error()
       break
     case 500:
-      message.push('500 miles!!!')
+      message.push('500 英里!!!\n')
       otherMessages = [
-        "So close to 1000!!!",
+        "很快呀, 啪的一下就到 500 英里!",
+        "太厉害了, 这么快就达到了500英里! 记得保存一下项目文档哦.",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.error()
       break
     case 1000:
-      message.push('1000 miles!!!')
+      message.push('1000 英里!!!\n')
       otherMessages = [
-        "Great job. :/ See ya.",
+        "干得漂亮! 不过我还是建议先帮你保存一下项目文档吧, 这样能确保这幅美丽的画作不会因为意外而丢失. \n(～￣▽￣)～ 回头见.",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.error()
@@ -825,8 +828,8 @@ const verifyScene = async () => {
   }
 
   if (missing.length) {
-    let message = `[WARNING] This scene is missing the following file(s):\n\n${missing.join('\n')}\n\n` +
-                  `This is probably not your fault, but is a bug caused by previous releases of Storyboarder.`
+    let message = `[WARNING] 这个场景缺少以下文件:\n\n${missing.join('\n')}\n\n` +
+                  `这可能不是你的错, 而是之前版本的 Storyboarder 造成的bug.`
 
     notifications.notify({ message, timing: 60 })
 
@@ -840,8 +843,8 @@ const verifyScene = async () => {
       log.info('saving placeholder', filename)
       saveDataURLtoFile(imageData, filename)
     }
-    notifications.notify({ message: 'We’ved added placeholder files for any missing image(s). ' +
-                                    'You should not see this warning again for this scene.', timing: 60 })
+    notifications.notify({ message: '我们为任何缺失的图像添加了占位符文件. ' +
+                                    '对于这个场景, 你应该不会再看到这个警告了.', timing: 60 })
   }
 
 
@@ -852,8 +855,8 @@ const verifyScene = async () => {
   for (let board of boardData.boards) {
     if (board.link) {
       if (!fs.existsSync(path.join(boardPath, 'images', board.link))) {
-      let message = `[WARNING] This scene is missing the linked file ${board.link}. ` +
-                    `It will be unlinked.`
+      let message = `[WARNING] 这个场景缺少链接的文件 ${board.link} . ` +
+                    `它将被解除链接.`
         log.warn(message)
         notifications.notify({ message, timing: 60 })
         delete board.link
@@ -873,7 +876,7 @@ const verifyScene = async () => {
   for (let board of boardData.boards) {
     if (!fs.existsSync(path.join(boardPath, 'images', boardModel.boardFilenameForPosterFrame(board)))) {
       if (boardsWithMissingPosterFrames.length == 0) {
-        notifications.notify({ message: 'Generating missing posterframes. Please wait …', timing: 60 })
+        notifications.notify({ message: '正在生成缺失的海报帧. 请稍候…', timing: 60 })
       }
       boardsWithMissingPosterFrames.push(board)
     }
@@ -883,7 +886,7 @@ const verifyScene = async () => {
     await new Promise(resolve => setTimeout(resolve, 500))
 
     boardsWithMissingPosterFrames.forEach(board => savePosterFrame(board, true))
-    notifications.notify({ message: `Done. Added ${boardsWithMissingPosterFrames.length} posterframes.`, timing: 60 })
+    notifications.notify({ message: `完成啦! 添加了 ${boardsWithMissingPosterFrames.length} 个海报框.`, timing: 60 })
   }
 }
 
@@ -941,7 +944,7 @@ const loadBoardUI = async () => {
 
     for (let file of files) {
       if (path.extname(file.name).match(/\.aif*/)) {
-        notifications.notify({ message: `Whoops! Sorry, Storyboarder can’t read AIFF files (yet).`, timing: 5 })
+        notifications.notify({ message: `哦! 抱歉, storyboarder 还不能读取AIFF文件.`, timing: 5 })
         return
       }
 
@@ -950,7 +953,7 @@ const loadBoardUI = async () => {
         hasRecognizedExtension &&
         audioPlayback.supportsType(file.name)
       ) {
-        notifications.notify({ message: `Copying audio file\n${file.name}`, timing: 5 })
+        notifications.notify({ message: `拷贝音频文件\n${file.name}`, timing: 5 })
         audioFileControlView.onSelectFile(file.path)
         return
       }
@@ -1272,7 +1275,7 @@ const loadBoardUI = async () => {
           let didChange = moveSelectedBoards(index)
 
           if (didChange) {
-            notifications.notify({message: 'Reordered!', timing: 5})
+            notifications.notify({message: '重新排序!', timing: 5})
           }
 
           renderThumbnailDrawer()
@@ -1298,7 +1301,7 @@ const loadBoardUI = async () => {
       sfx.rollover()
     } else {
       sfx.error()
-      notifications.notify({message: 'Nothing left to undo!', timing: 5})
+      notifications.notify({message: '呃, 已经达到撤回上限了!', timing: 5})
     }
     sfx.playEffect('metal')
   })
@@ -1310,7 +1313,7 @@ const loadBoardUI = async () => {
       sfx.rollover()
     } else {
       sfx.error()
-      notifications.notify({message: 'Nothing more to redo!', timing: 5})
+      notifications.notify({message: '呃, 已经达到恢复上限了!', timing: 5})
     }
     sfx.playEffect('metal')
   })
@@ -1556,7 +1559,7 @@ const loadBoardUI = async () => {
           .then(({ response }) => {
             if (response === 0) {
               // Unlink and Draw
-              notifications.notify({ message: `Stopped watching\n${board.link}\nfor changes.` })
+              notifications.notify({ message: `停止观察\n${board.link}\n的变化.` })
               linkedFileManager.removeBoard(board)
               delete board.link
               markBoardFileDirty()
@@ -1632,7 +1635,7 @@ const loadBoardUI = async () => {
 
       if(isRecording && data.state === "completed") {
         // make sure we capture the last frame
-        notifications.notify({message: "Congratulations! Generating your timelapse! This can take a minute.", timing: 5})
+        notifications.notify({message: "好耶! 正在生成您的延时快照! 这可能需要一分钟.", timing: 5})
 
         // grab full-size image from current sketchpane (in memory)
         let pixels = storyboarderSketchPane.sketchPane.extractThumbnailPixels(
@@ -1798,7 +1801,7 @@ const loadBoardUI = async () => {
       }
 
       notifications.notify({
-        message: `Storyboarder preferences have changed. Please close and re-open this project window for new preferences to take effect.`,
+        message: `Storyboarder 的首选项发生了变化. 请关闭并重新打开此项目窗口以使新的首选项生效.`,
         timing: 30
       })
     }
@@ -1855,7 +1858,7 @@ const loadBoardUI = async () => {
     // onSelectFile = via drop
     onSelectFile: async function (filepath) {
       if ( ! audioFileControlView.isIdle() ) {
-        notifications.notify({ message: `Can’t add an audio file while recorder is active. Recorder mode is: ${audioFileControlView.state.mode}.`, timing: 5 })
+        notifications.notify({ message: `录音机处于活动状态时, 无法添加音频文件. 当前录音机的模式为: ${audioFileControlView.state.mode}.`, timing: 5 })
         return
       }
 
@@ -1871,14 +1874,14 @@ const loadBoardUI = async () => {
       if (fs.existsSync(newpath)) {
         const { response } = await remote.dialog.showMessageBox({
           type: 'question',
-          buttons: ['Yes', 'No'],
-          title: 'Confirm',
-          message: `A file named ${path.basename(newpath)} already exists in this project. Overwrite it?`
+          buttons: ['是', '否'],
+          title: '问问',
+          message: `这个项目中已经存在一个名为 ${path.basename(newpath)} 的文件. 要覆盖它吗?`
         })
         shouldOverwrite = (response === 0)
       }
       if (!shouldOverwrite) {
-        notifications.notify({ message: 'Cancelled', timing: 5 })
+        notifications.notify({ message: '取消了', timing: 5 })
         return
       }
 
@@ -1890,7 +1893,7 @@ const loadBoardUI = async () => {
       board.audio.filename = newFilename
       // update the audio playback buffers
       const { failed } = await audioPlayback.updateBuffers()
-      failed.forEach(filename => notifications.notify({ message: `Could not load audio file ${filename}` }))
+      failed.forEach(filename => notifications.notify({ message: `无法加载音频文件: \n${filename}` }))
       updateAudioDurations()
       storeUndoStateForScene()
 
@@ -1910,7 +1913,7 @@ const loadBoardUI = async () => {
       if (event) event.preventDefault()
 
       if ( ! audioFileControlView.isIdle() ) {
-        notifications.notify({ message: `Can’t add an audio file while recorder is active. Recorder mode is: ${audioFileControlView.state.mode}.`, timing: 5 })
+        notifications.notify({ message: `录音机处于活动状态时, 无法添加音频文件. 当前录音机的模式为: ${audioFileControlView.state.mode}.`, timing: 5 })
         return
       }
 
@@ -1960,7 +1963,7 @@ const loadBoardUI = async () => {
 
         // update the audio playback buffers
         const { failed } = await audioPlayback.updateBuffers()
-        failed.forEach(filename => notifications.notify({ message: `Could not load audio file ${filename}` }))
+        failed.forEach(filename => notifications.notify({ message: `无法加载音频文件: \n${filename}` }))
         storeUndoStateForScene()
 
         // mark .storyboarder scene JSON file dirty
@@ -2017,7 +2020,7 @@ const loadBoardUI = async () => {
       // TODO can we reproduce this? can this really happen?
       //      maybe just fail silently?
       if (!buffer) {
-        notifications.notify({ message: 'No audio recorded.', timing: 5 })
+        notifications.notify({ message: '终止录制, 时长太短了.', timing: 5 })
 
         renderThumbnailDrawer()
         audioFileControlView.setState({
@@ -2039,10 +2042,10 @@ const loadBoardUI = async () => {
 
       try {
         fs.writeFileSync(newPath, buffer, { encoding: 'binary' })
-        notifications.notify({ message: 'Saved audio!', timing: 5 })
+        notifications.notify({ message: '保存音频!', timing: 5 })
       } catch (err) {
         log.error(err)
-        notifications.notify({ message: `Error saving audio. ${err}`, timing: 5 })
+        notifications.notify({ message: `Oops! \n保存音频出现错误: \n${err}`, timing: 5 })
         recordingToBoardIndex = undefined
         return
       }
@@ -2053,7 +2056,7 @@ const loadBoardUI = async () => {
       board.audio.filename = newFilename
       // update the audio playback buffers
       const { failed } = await audioPlayback.updateBuffers()
-      failed.forEach(filename => notifications.notify({ message: `Could not load audio file ${filename}` }))
+      failed.forEach(filename => notifications.notify({ message: `无法加载音频文件: ${filename}` }))
       updateAudioDurations()
       storeUndoStateForScene()
 
@@ -2095,7 +2098,7 @@ const renderScene = async () => {
   audioPlayback.resetBuffers()
 
   const { failed } = await audioPlayback.updateBuffers()
-  failed.forEach(filename => notifications.notify({ message: `Could not load audio file ${filename}` }))
+  failed.forEach(filename => notifications.notify({ message: `无法加载音频文件: ${filename}` }))
   updateAudioDurations()
 
   // now that audio buffers have loaded, we can create the scene timeline
@@ -2248,7 +2251,7 @@ let insertNewBoardsWithFiles = async filepaths => {
 
   let count = filepaths.length
   notifications.notify({
-    message: `Importing ${count} image${count !== 1 ? 's' : ''}.\nPlease wait …`,
+    message: `导入 ${count} 图像 ${count !== 1 ? 's' : ''}.\n稍安勿躁…`,
     timing: 2
   })
 
@@ -2289,7 +2292,7 @@ let insertNewBoardsWithFiles = async filepaths => {
     } catch (error) {
       log.error('Error loading image', error)
       notifications.notify({
-        message: `Could not load image ${path.basename(filepath)}\n` + error.message,
+        message: `无法加载图像: ${path.basename(filepath)}\n` + error.message,
         timing: 10
       })
     }
@@ -2299,11 +2302,11 @@ let insertNewBoardsWithFiles = async filepaths => {
 
   if (numAdded > 0) {
     notifications.notify({
-      message: `Imported ${numAdded} image${numAdded !== 1 ? 's' : ''}.\n\n` +
-              `The image${numAdded !== 1 ? 's are' : ' is'} on the reference layer, ` +
-              `so you can draw over ${numAdded !== 1 ? 'them' : 'it'}. ` +
-              `If you'd like ${numAdded !== 1 ? 'them' : 'it'} to be the main layer, ` +
-              `you can merge ${numAdded !== 1 ? 'them' : 'it'} up on the sidebar`,
+      message: `导入 ${numAdded} 图像 ${numAdded !== 1 ? 's' : ''}.\n\n` +
+              `把此图像 ${numAdded !== 1 ? 's are' : ' is'} 参考层, ` +
+              `所以你可以在上面绘画 ${numAdded !== 1 ? 'them' : 'it'}. ` +
+              `如果你想把 ${numAdded !== 1 ? 'them' : 'it'} 作为主图层, ` +
+              `你可以在侧边栏上合并 ${numAdded !== 1 ? 'them' : 'it'}`,
       timing: 10
     })
     sfx.positive()
@@ -2427,7 +2430,7 @@ const addToLineMileage = value => {
 
   let allowNotificationsForLineMileage = prefsModule.getPrefs()['allowNotificationsForLineMileage']
   if (allowNotificationsForLineMileage) {
-    let mileageChecks = [5,8,10,20,50,100,200,300,1000]
+    let mileageChecks = [5,8,10,20,50,100,200,300,500,1000] //这里为甚么少了500?
     for (let checkAmount of mileageChecks) {
       if ((board.lineMileage/5280 < checkAmount) && ((board.lineMileage + value)/5280 > checkAmount)) {
         commentOnLineMileage(checkAmount)
@@ -2453,8 +2456,8 @@ const onDrawIdle = () => {
   if (!hasWarnedOnceAboutFps && storyboarderSketchPane.shouldWarnAboutFps()) {
     hasWarnedOnceAboutFps = true
     notifications.notify({
-      message:  'Hmm, looks like Storyboarder is running a little slow. ' +
-                'For a speed boost, try disabling the “High Quality Drawing Engine” in Preferences.',
+      message:  'Hmm.. 看起来 Storyboarder 运行得有点慢. ' +
+                '不想让它卡顿的话, 请尝试在首选项中禁用 \"高质量绘图引擎\" .',
       timing: 30
     })
   }
@@ -2815,8 +2818,8 @@ let openInEditor = async () => {
           // file doesn’t exist but link exists
           let shouldOverwrite = true
           notifications.notify({
-            message:  `[WARNING] Could not find linked file:\n${board.link}\n` +
-                      `Saving to:\n${path.basename(psdPath)} instead.`
+            message:  `[WARNING] 找不到链接的文件: \n${board.link}\n` +
+                      `存放在: \n${path.basename(psdPath)} .`
           })
           // TODO could check to see if psdPath and board.link differ? that would be a weird edge case
         } else {
@@ -2900,7 +2903,7 @@ let openInEditor = async () => {
 
   } catch (error) {
     log.error(error)
-    notifications.notify({ message: '[WARNING] Error opening files in editor.' })
+    notifications.notify({ message: '[WARNING] 在编辑器中打开文件时出错.' })
     notifications.notify({ message: error.toString() })
     return
   }
@@ -2914,8 +2917,8 @@ const refreshLinkedBoardByFilename = async (filename, options = { forceReadFromF
 
   if (!board) {
     let message =
-      'Tried to update, from external editor,' +
-      'a file that is not linked to any board: ' + filename
+      '尝试从外部编辑器更新,' +
+      '但没有链接到任何板的文件: ' + filename
 
     log.info(message)
     notifications.notify({
@@ -3039,7 +3042,7 @@ const refreshLinkedBoardByFilename = async (filename, options = { forceReadFromF
   } catch (err) {
     log.error(err)
     notifications.notify({
-      message: `[WARNING] Could not import from file ${filename}.`
+      message: `[WARNING] 无法从文件导入 ${filename}.`
     })
     notifications.notify({
       message: err.toString()
@@ -3364,12 +3367,12 @@ let duplicateBoard = async () => {
 
     // sfx.bip('c7')
     sfx.down(-1, 2)
-    notifications.notify({ message: 'Duplicated board.', timing: 5 })
+    notifications.notify({ message: '原地复制.', timing: 5 })
 
     return insertAt
   } catch (err) {
     log.error(err)
-    notifications.notify({ message: 'Error: Could not duplicate board.', timing: 5 })
+    notifications.notify({ message: 'Oops: 无法复制画板.', timing: 5 })
     throw new Error(err)
   }
 }
@@ -3390,14 +3393,15 @@ const clearLayers = shouldEraseCurrentLayer => {
     storyboarderSketchPane.clearLayers([storyboarderSketchPane.sketchPane.getCurrentLayerIndex()])
     // saveImageFile()
     sfx.playEffect('trash')
-    notifications.notify({ message: 'Cleared current layer.', timing: 5 })
+    notifications.notify({ message: '成功清除了当前图层.', timing: 5 })
   } else {
     if (storyboarderSketchPane.isEmpty()) {
       let numDeleted = deleteBoards()
       if (numDeleted > 0) {
-        let noun = `board${numDeleted > 1 ? 's' : ''}`
+        //let noun = `board${numDeleted > 1 ? 's' : ''}` 中文语境里没有 (s) 复数.
+        let noun = `个画板`
         notifications.notify({
-          message: `Deleted ${numDeleted} ${noun}.`,
+          message: `成功移除了 ${numDeleted} ${noun}.`,
           timing: 5
         })
       }
@@ -3405,7 +3409,7 @@ const clearLayers = shouldEraseCurrentLayer => {
       storyboarderSketchPane.clearLayers()
       // saveImageFile()
       sfx.playEffect('trash')
-      notifications.notify({ message: 'Cleared all layers.', timing: 5 })
+      notifications.notify({ message: '成功清除了所有图层.', timing: 5 })
     }
   }
 }
@@ -3823,7 +3827,7 @@ let nextScene = ()=> {
       gotoBoard(currentBoard)
     } else {
       sfx.error()
-      notifications.notify({message: "Sorry buddy. I can't go back further.", timing: 5})
+      notifications.notify({message: "对不起朋友, 我不能再往前看了.", timing: 5})
     }
   }
 }
@@ -3851,7 +3855,7 @@ let previousScene = ()=> {
       gotoBoard(currentBoard)
     } else {
       sfx.error()
-      notifications.notify({message: "Nope. I can't go any further.", timing: 5})
+      notifications.notify({message: "不, 我不能再往前走了.", timing: 5})
     }
   }
 }
@@ -4193,9 +4197,10 @@ let renderThumbnailDrawer = () => {
     contextMenu.on('delete', () => {
       let numDeleted = deleteBoards()
       if (numDeleted > 0) {
-        let noun = `board${numDeleted > 1 ? 's' : ''}`
+        //let noun = `board${numDeleted > 1 ? 's' : ''}` 中文语境里没有 (s) 复数.
+        let noun = `个画板`
         notifications.notify({
-          message: `Deleted ${numDeleted} ${noun}.`,
+          message: `成功移除了 ${numDeleted} ${noun}.`,
           timing: 5
         })
       }
@@ -4211,7 +4216,7 @@ let renderThumbnailDrawer = () => {
     contextMenu.on('copy', () => {
       copyBoards()
         .then(() => notifications.notify({
-          message: 'Copied board(s) to clipboard.', timing: 5
+          message: '好啦~ 画板已经复制在剪贴板里了.', timing: 5
         }))
         .catch(err => {})
     })
@@ -4841,7 +4846,7 @@ window.onkeydown = (e) => {
       e.preventDefault()
       copyBoards()
         .then(() => notifications.notify({
-          message: 'Copied board(s) to clipboard.', timing: 5
+          message: '好啦~ 画板已经复制在剪贴板里了.', timing: 5
         }))
         .catch(err => {})
 
@@ -4850,7 +4855,7 @@ window.onkeydown = (e) => {
       copyBoards()
         .then(() => {
           deleteBoards()
-          notifications.notify({ message: 'Cut board(s) to clipboard.', timing: 5 })
+          notifications.notify({ message: '好啦~ 画板已经剪切在剪贴板里了.', timing: 5 })
         }).catch(err => {})
 
     } else if (isCommandPressed('menu:edit:paste')) {
@@ -4868,7 +4873,7 @@ window.onkeydown = (e) => {
         sfx.rollover()
       } else {
         sfx.error()
-        notifications.notify({ message: 'Nothing more to redo!', timing: 5 })
+        notifications.notify({ message: '呃, 已经达到恢复上限了!!', timing: 5 })
       }
 
     } else if (isCommandPressed('menu:edit:undo')) {
@@ -4882,7 +4887,7 @@ window.onkeydown = (e) => {
         sfx.rollover()
       } else {
         sfx.error()
-        notifications.notify({ message: 'Nothing left to undo!', timing: 5 })
+        notifications.notify({ message: '呃, 已经达到撤回上限了!', timing: 5 })
       }
 
     // TAB and SHIFT+TAB
@@ -5297,7 +5302,7 @@ ipcRenderer.on('undo', (e, arg) => {
       sfx.rollover()
     } else {
       sfx.error()
-      notifications.notify({message: 'Nothing more to undo!', timing: 5})
+      notifications.notify({message: '呃, 已经达到撤回上限了!!', timing: 5})
     }
   } else {
     // find the focused window (which may be main-window)
@@ -5320,7 +5325,7 @@ ipcRenderer.on('redo', (e, arg) => {
       sfx.rollover()
     } else {
       sfx.error()
-      notifications.notify({message: 'Nothing left to redo!', timing: 5})
+      notifications.notify({message: '呃, 已经达到恢复上限了!!', timing: 5})
     }
   } else {
     // find the focused window (which may be main-window)
@@ -5346,7 +5351,7 @@ ipcRenderer.on('copy', event => {
     // log.info('copy boards')
     copyBoards()
       .then(() => notifications.notify({
-        message: 'Copied board(s) to clipboard.', timing: 5
+        message: '好啦~ 画板已经复制在剪贴板里了.', timing: 5
       }))
       .catch(err => {
         log.error(err)
@@ -5389,10 +5394,10 @@ ipcRenderer.on('paste', () => {
 })
 
 ipcRenderer.on('paste-replace', () => {
-  notifications.notify({ message: `Pasting …` })
+  notifications.notify({ message: `粘贴…` })
   pasteAndReplace()
     .then(() => {
-      notifications.notify({ message: `Paste complete.` })
+      notifications.notify({ message: `粘贴完成.` })
       sfx.positive()
     })
     .catch(err => {
@@ -5451,7 +5456,7 @@ const replaceReferenceLayerImage = async imageDataURL => {
   // renderThumbnailDrawer()
 
   notifications.notify({
-    message: `Replaced reference layer image.`,
+    message: `替换参考层图像.`,
     timing: 10
   })
   sfx.positive()
@@ -5552,7 +5557,7 @@ let copyBoards = async () => {
   } catch (err) {
     log.info('Error. Could not copy.')
     log.error(err)
-    notifications.notify({ message: 'Error. Couldn’t copy.' })
+    notifications.notify({ message: '抱歉, 暂时不能复制.' })
     throw err
   }
 }
@@ -5575,7 +5580,7 @@ const exportAnimatedGif = async () => {
   let boardSize = storyboarderSketchPane.getCanvasSize()
 
   notifications.notify({
-    message: 'Exporting ' + boards.length + ' boards. Please wait...',
+    message: '导出 ' + boards.length + ' 张画板. 稍安勿躁...',
     timing: 5
   })
 
@@ -5587,48 +5592,48 @@ const exportAnimatedGif = async () => {
 
     let exportPath = await exporter.exportAnimatedGif(boards, boardSize, 888, boardFilename, shouldWatermark, boardData, watermarkSrc)
     notifications.notify({
-      message: 'I exported your board selection as a GIF. Share it with your friends! Post it to your twitter thing or your slack dingus.',
+      message: '好耶, 我们把你所选的画板导出成GIF动图啦。和你的朋友分享吧！把它发布到你的推特或者你的博客上.',
       timing: 20
     })
     sfx.positive()
     shell.showItemInFolder(exportPath)
   } catch (err) {
     log.error(err)
-    notifications.notify({ message: 'Could not export. An error occurred.' })
+    notifications.notify({ message: '欧布, 出现了大问题, 导出失败哩.' })
     notifications.notify({ message: err.toString() })
   }
 }
 
 
 const exportFcp = () => {
-  notifications.notify({message: "Exporting " + boardData.boards.length + " boards to FCP and Premiere. Please wait...", timing: 5})
+  notifications.notify({message: "导出 " + boardData.boards.length + " 个画板到 FCP 或者 Premiere. 稍安勿躁...", timing: 5})
   sfx.down()
   setTimeout(()=>{
     exporter.exportFcp(boardData, boardFilename).then(outputPath => {
-      notifications.notify({message: "Your scene has been exported for Final Cut Pro X and Premiere.", timing: 20})
+      notifications.notify({message: "您的场景已经导出好了, 现在你可以在 Final Cut Pro X 或者 Premiere 上编辑它们.", timing: 20})
       sfx.positive()
       shell.showItemInFolder(outputPath)
     }).catch(err => {
       log.error(err)
-      notifications.notify({ message: 'Could not export. An error occurred.' })
+      notifications.notify({ message: '呃啊啊啊, 出现问题了, 导出失败了.' })
       notifications.notify({ message: err.toString() })
     })
   }, 1000)
 }
 
 const exportImages = () => {
-  notifications.notify({message: "Exporting " + boardData.boards.length + " to a folder. Please wait...", timing: 5})
+  notifications.notify({message: "导出 " + boardData.boards.length + " 到文件夹. 稍安勿躁...", timing: 5})
   sfx.down()
   setTimeout(()=>{
     exporter.exportImages(boardData, boardFilename)
     .then(outputPath => {
-      notifications.notify({message: "Your scene has been exported as images.", timing: 20})
+      notifications.notify({message: "您的场景已导出为图像.", timing: 20})
       sfx.positive()
       shell.showItemInFolder(outputPath)
     })
     .catch(err => {
       log.error(err)
-      notifications.notify({ message: 'Could not export. An error occurred.' })
+      notifications.notify({ message: '我们发生了一个意外, 导出失败了...' })
       notifications.notify({ message: err.toString() })
     })
   }, 1000)
@@ -5651,7 +5656,7 @@ const exportCleanup = () => {
 }
 
 const exportVideo = async () => {
-  notifications.notify({ message: "Exporting " + boardData.boards.length + " boards to video. For long scenes this could take a few minutes. Please wait...", timing: 30 })
+  notifications.notify({ message: "导出 " + boardData.boards.length + " 个画板拿去制作影片. 如果选择的画幅很多的话, 可能会花费更多时间. 稍安勿躁...", timing: 30 })
 
   let scene = boardData
   let sceneFilePath = boardFilename
@@ -5667,12 +5672,12 @@ const exportVideo = async () => {
           // notifications.notify({message: `${Math.round(progress * 100)}% complete`, timing: 1})
       }
     )
-    notifications.notify({message: "Your scene has been exported to video.", timing: 20})
+    notifications.notify({message: "您的场景已导出为视频.", timing: 20})
     sfx.positive()
     shell.showItemInFolder(outputFilePath)
   } catch (err) {
     log.error(err)
-    notifications.notify({ message: 'Could not export. An error occurred.' })
+    notifications.notify({ message: '导出失败了... 好像出了点问题.' })
     notifications.notify({ message: err.toString() })
   }
 }
@@ -5683,10 +5688,10 @@ let save = () => {
   sfx.positive()
 
   if (prefsModule.getPrefs()['enableAutoSave']) {
-    notifications.notify({message: "Saving is automatic. I already saved before you pressed this, so you don't really need to save at all. \n\nBut I did want you to know, that I think you're special - and I like you just the way you are.\n\nHere's a story tip..." , timing: 15})
+    notifications.notify({message: "保存是自动的. 其实你按下这个按钮之前, 我已经帮你保存过了, 所以你完全不需要手动保存. \n\n但我想让你知道, 我觉得你很特别 —— 我喜欢你现在的样子.\n\n噢, 这里有一个故事提示..." , timing: 15})
     setTimeout(()=>{storyTips.show()}, 1000)
   } else {
-    notifications.notify({ message: "Saved." })
+    notifications.notify({ message: "已保存!" })
   }
 }
 
@@ -5751,9 +5756,9 @@ let pasteBoards = async () => {
 
   if (pasted && pasted.boards && pasted.boards.length) {
     if (pasted.boards.length > 1) {
-      notifications.notify({ message: "Pasting " + pasted.boards.length + " boards.", timing: 5 })
+      notifications.notify({ message: "成功粘贴了 " + pasted.boards.length + " 个画板.", timing: 5 })
     } else {
-      notifications.notify({ message: "Pasting a board.", timing: 5 })
+      notifications.notify({ message: "成功粘贴了一个画板.", timing: 5 })
     }
 
     let selectionsAsArray = [...selections].sort(util.compareNumbers)
@@ -5793,7 +5798,7 @@ let pasteBoards = async () => {
             fs.writeFileSync(to, fs.readFileSync(from))
           } else {
             notifications.notify({
-              message: `[WARNING]. Could not copy linked file ${src.link}`,
+              message: `[WARNING]. 无法复制链接的文件 ${src.link}`,
               timing: 8
             })
           }
@@ -5816,7 +5821,7 @@ let pasteBoards = async () => {
       renderThumbnailDrawer()
 
       log.info('paste complete')
-      notifications.notify({ message: `Paste complete.` })
+      notifications.notify({ message: `粘贴完成!` })
       sfx.positive()
       await gotoBoard(insertAt)
 
@@ -5824,11 +5829,11 @@ let pasteBoards = async () => {
       log.error(err)
       log.info(err.stack)
       log.info(new Error().stack)
-      notifications.notify({ message: `Whoops. Could not paste boards. ${err.message}`, timing: 8 })
+      notifications.notify({ message: `噢, 现在暂时不能将画板粘贴出来. ${err.message}`, timing: 8 })
       throw err
     }
   } else {
-    notifications.notify({ message: "There's nothing in the clipboard that I can paste. Are you sure you copied it right?", timing: 8 })
+    notifications.notify({ message: "嗯, 当前的剪贴板暂时是空的, 无法粘贴, 不妨先检查下有没有按下 Ctrl + C ?", timing: 8 })
     sfx.error()
     throw new Error('empty clipboard')
   }
@@ -6051,7 +6056,7 @@ const importFromWorksheet = async (imageArray) => {
   // insert boards from worksheet data
   //
   try {
-    notifications.notify({ message: 'Worksheet Import starting …', timing: 5 })
+    notifications.notify({ message: '开始导入工作表…', timing: 5 })
 
     // store the "before" state
     storeUndoStateForScene(true)
@@ -6065,10 +6070,10 @@ const importFromWorksheet = async (imageArray) => {
     renderThumbnailDrawer()
 
     sfx.positive()
-    notifications.notify({ message: 'Worksheet Import complete.', timing: 5 })
+    notifications.notify({ message: '工作表导入完成.', timing: 5 })
     return gotoBoard(insertAt)
   } catch (err) {
-    notifications.notify({ message: 'Whoops. Could not import.', timing: 8 })
+    notifications.notify({ message: '呃, 出现意外了, 无法导入工作表.', timing: 8 })
     log.info(err)
   }
 }
@@ -6151,7 +6156,7 @@ let reorderBoardsLeft = () => {
     renderThumbnailDrawer()
     gotoBoard(currentBoard, true)
     sfx.playEffect('on')
-    notifications.notify({message: 'Reordered to the left!', timing: 5})
+    notifications.notify({message: '重新排序到左边!', timing: 5})
   }
 }
 
@@ -6165,7 +6170,7 @@ let reorderBoardsRight = () => {
     renderThumbnailDrawer()
     gotoBoard(currentBoard, true)
     sfx.playEffect('metal')
-    notifications.notify({message: 'Reordered to the right!', timing: 5})
+    notifications.notify({message: '重新排序到右边!', timing: 5})
   }
 }
 
@@ -6292,53 +6297,54 @@ const welcomeMessage = () => {
   let otherMessages
   let hour = new Date().getHours()
   if (hour < 12) {
-    message.push('Good morning!')
+    message.push('早安呐!')
     otherMessages = [
-      "It's time for a healthy breakfast!",
-      "It's beautiful out today – At least where I am.",
-      "You look great today.",
+      "是吃早餐的时候啦~",
+      "今天外面很美 -祝你有美好的一天.",
+      "你今天看起来棒极了.",
+      "今天状态格外的棒呀, 你觉得呢?",
+      "准备开始美好的一天吧!",
       "",
-      ""
     ]
     message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
   } else if (hour > 12 && hour <= 17) {
-    message.push('Good afternoon!')
+    message.push('下午好呀!')
     otherMessages = [
-      "If you do a great job, I'll let you have an afternoon snack! Don't tell your mom.",
+      "如果你做得很好, 我会让你吃下午点心! \"别告诉你妈妈\" ",
       "",
-      "Almost quittin' time AMIRITE?",
-      "I'm still hungry. You?",
-      "Should we take a walk later?",
+      "快到下班时间了吧? 我说得对不对?",
+      "我有点饿了, 你呢?",
+      "我们待会去散步好吗?",
     ]
     message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
   } else if (hour > 17) {
-    message.push('Good evening!')
+    message.push('晚上好!')
     otherMessages = [
-      "When it gets dark out is when I do my best work.",
-      "Hey. I was just about to leave.",
+      "天黑的时候是我工作效率最高的时候.",
+      "你来了, 欢迎回来!",
       "",
     ]
     message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
   } else if (hour == 12) {
-    message.push('Lunch time!')
+    message.push('午安呐!')
     otherMessages = [
-      "Wait, you're working at lunchtime? Your boss sounds like a real jerk.",
-      "Did you even eat yet?",
-      "Yeah! Let's work together!",
+      "等等, 吃午餐时间还在工作? 你的老板听起来真是个混蛋.",
+      "嗯, 你吃饭了吗?",
+      "Yeah! 让我们一起努力吧!",
     ]
     message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
   }
   otherMessages = [
-    "It's time to board!",
-    "Let's tell some great stories!",
-    "I love storyboarding! Let's make something great together!",
-    "If you like Storyboarder, maybe like tell your friends on Twitter.",
+    "现在是画画时刻!",
+    "让我们讲一些伟大的故事吧!",
+    "我喜欢画故事板! 现在来让我们一起创造伟大的东西吧!",
+    "如果您对所创作出来的故事很有兴趣的话, 你可以尝试分享到 Twitter 上来和朋友一起欣赏.",
   ]
   message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
   otherMessages = [
-    "Here's a quote I totally did not just download from the internet:",
-    "I think you're the best.",
-    "If you have ideas for Storyboarder, let us know! We'd love to hear from you.",
+    "Hey! 这里有一句我绝对不是刚刚从网上找来的名言:",
+    "我觉得你现在的状态超级棒!",
+    "如果你有对 Storyboarder 的想法，随时告诉我们吧！我们很想听听你的意见.",
     "",
   ]
   message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
@@ -6500,7 +6506,7 @@ const saveAsFolder = async () => {
     return
   }
 
-  notifications.notify({ message: `Saving to “${path.basename(dstFolderPath)}” …`})
+  notifications.notify({ message: `保存到 “${path.basename(dstFolderPath)}” …`})
 
   try {
     // log.info('Copying to', dstFolderPath)
@@ -6528,7 +6534,7 @@ const saveAsFolder = async () => {
 
     let dstFilePath = path.join(dstFolderPath, path.basename(dstFolderPath) + path.extname(srcFilePath))
 
-    notifications.notify({ message: `Done! Reloading …`})
+    notifications.notify({ message: `完成啦! 然后尝试重新载入…`})
 
     // reload the project
     ipcRenderer.send('openFile', dstFilePath)
@@ -6538,7 +6544,7 @@ const saveAsFolder = async () => {
       type: 'error',
       message: error.message
     })
-    notifications.notify({ message: `"Save As" failed.`})
+    notifications.notify({ message: `"另存为" 失败了.`})
   }
 }
 
@@ -6588,7 +6594,7 @@ const showSignInWindow = () => {
   })
 }
 ipcRenderer.on('signInSuccess', (event, response) => {
-  notifications.notify({ message: 'Success! You’re Signed In!' })
+  notifications.notify({ message: '成功! 你已经成功登录! \n欢迎回来!' })
 
   prefsModule.set('auth', { token: response.token })
 
@@ -6778,9 +6784,10 @@ ipcRenderer.on('deleteBoards', (event, args)=>{
   if (!textInputMode) {
     let numDeleted = deleteBoards(args)
     if (numDeleted > 0) {
-      let noun = `board${numDeleted > 1 ? 's' : ''}`
+      //let noun = `board${numDeleted > 1 ? 's' : ''}` 呃呃呃, 中文语境里没有复数的说
+      let noun = "个画板";
       notifications.notify({
-        message: `Deleted ${numDeleted} ${noun}.`,
+        message: `成功移除了 ${numDeleted} ${noun}.`,
         timing: 5
       })
     }
