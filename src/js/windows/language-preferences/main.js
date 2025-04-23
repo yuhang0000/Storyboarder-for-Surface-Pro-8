@@ -42,7 +42,7 @@ const createWindow = async ( onComplete) => {
   
       backgroundColor: '#333333',
       titleBarStyle: 'hiddenInset',
-      title: "Language Preferences",
+      title: "语言首选项",
       acceptFirstMouse: true,
       simpleFullscreen: true,
       webPreferences: {

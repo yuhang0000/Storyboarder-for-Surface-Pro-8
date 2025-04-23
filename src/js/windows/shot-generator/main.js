@@ -65,9 +65,9 @@ const show = async (onComplete) => {
   win.webContents.on('will-prevent-unload', event => {
     const choice = dialog.showMessageBoxSync({
       type: 'question',
-      buttons: ['Yes', 'No'],
-      title: 'Confirm',
-      message: 'Your scene is not saved. Are you sure you want to close Shot Generator?'
+      buttons: ['是', '否'],
+      title: '提示',
+      message: '您的场景尚未保存. 您确定要关闭辅助镜头吗?'
     })
 
     const leave = (choice === 0)

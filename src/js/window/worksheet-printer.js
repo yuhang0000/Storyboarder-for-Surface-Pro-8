@@ -184,11 +184,11 @@ class WorksheetPrinter extends EventEmitter {
     doc.moveDown()
     doc.font('thin')
     doc.fontSize(6)
-    doc.text('1. Try to keep the paper flat.')
-    doc.text('2. Draw as many boards as you need.')
-    doc.text('3. Go to this address on your phone:')
+    doc.text('1. 首先把纸面放平, 避免出现皱纹.')
+    doc.text('2. 然后整理好拍摄下来的素材.')
+    doc.text('3. 再然后在手机浏览器上访问这个网址:')
     doc.text('      ' + this.ipString)
-    doc.text('4. Or import in Storyboarder [CMD+I]')
+    doc.text('4. 或者在 Storyboarder 里导入 [Ctrl+I]')
 
     // draw boxes
     let boxesDim = [cols,rows]

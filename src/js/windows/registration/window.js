@@ -31,9 +31,9 @@ const hasValidAuthToken = () => {
 const handleError = err => {
   console.error(err)
   if (err.message === 'Failed to fetch') {
-    window.alert('Whoops! Couldn’t connect to the server. Please check your network connection and try again.\nError: ' + err.message)
+    window.alert('Whoops! 无法连接到服务器. 请检查您的网络连接, 然后再试.\n' + err.message)
   } else {
-    window.alert('Whoops! An error occurred.\n' + err.message)
+    window.alert('Whoops! 遇到了一个错误.\n' + err.message)
   }
 }
 const init = () => {
@@ -107,7 +107,7 @@ class SignInView {
 
     let hostname = new window.URL(SIGN_UP_URI).hostname
     clone.querySelector('a[rel="external"]').href = SIGN_UP_URI
-    clone.querySelector('a[rel="external"]').innerHTML = `Sign Up at ${hostname}`
+    clone.querySelector('a[rel="external"]').innerHTML = `登陆在 ${hostname}`
     clone.querySelector('a[rel="external"]').addEventListener('click', event => {
       event.preventDefault()
       remote.shell.openExternal(event.target.href)
@@ -121,17 +121,17 @@ class SignInView {
     if (store.getState().license.licenseId) {
       let div = document.createElement('div')
       div.classList.add('registration-window__topbar')
-      div.innerHTML = `Registered To: <strong>${store.getState().license.registeredTo}</strong>`
+      div.innerHTML = `注册给: <strong>${store.getState().license.registeredTo}</strong>`
       this.el.insertBefore(div, this.el.firstChild)
     }
   }
   lock (event) {
     event.target.querySelector('button').disabled = true
-    event.target.querySelector('button').innerHTML = 'Signing In …'
+    event.target.querySelector('button').innerHTML = '登录中…'
   }
   unlock (event) {
     event.target.querySelector('button').disabled = false
-    event.target.querySelector('button').innerHTML = 'Sign In'
+    event.target.querySelector('button').innerHTML = '登录'
   }
   async onSubmit (event) {
     event.preventDefault()
@@ -155,7 +155,7 @@ class SignInView {
       )
   
       if (res.status == 403) {
-        window.alert('That email/password combination was not accepted.')
+        window.alert('这个邮箱/密码输入错误, 无法登录, 请重试.')
         this.unlock(event)
         return
       }
@@ -167,7 +167,7 @@ class SignInView {
         }
     
         event.target.querySelector('button').disabled = true
-        event.target.querySelector('button').innerHTML = 'Signed In!'
+        event.target.querySelector('button').innerHTML = '登录成功!'
 
         store.dispatch({
           type: 'SET_AUTH',
@@ -242,7 +242,7 @@ class HomeView {
                 data-subscription-id="${subscription.subscription_id}"
                 data-js="install"
                 style="color: blue">
-                Install
+                注册许可证
                 </a>
           </td>
         </tr>
@@ -250,28 +250,28 @@ class HomeView {
 
       let license = store.getState().license
 
-      this.el.querySelector('h1[data-js="heading"]').innerHTML = 'Hello!'
+      this.el.querySelector('h1[data-js="heading"]').innerHTML = '欢迎!'
       this.el.querySelector('div[data-js="greeting"]').innerHTML = `
-        <p>Thank you for supporting Storyboarder.</p>
+        <p>感谢您使用 Storyboarder.</p>
         ${
           (license != null && license.licenseId != null)
             ? `
-              <p>This machine has a Storyboarder license registered to:</p>
+              <p>这个设备有一个注册了 StoryBoarder 的许可证:</p>
               <p><strong>${license.registeredTo}</strong></p>
-              <p>Thank you for your support!</p>
-              <p>Expires: ${license.licenseExpiration == null ? 'Never' : license.licenseExpiration}</p>
+              <p>感谢您的支持!</p>
+              <p>许可证过期时间: ${license.licenseExpiration == null ? 'Never' : license.licenseExpiration}</p>
               <p>
-                <a href="#" data-js="uninstall">Remove license from this machine</a>
+                <a href="#" data-js="uninstall">从这个设备上移除许可证</a>
                 <br/><br/>
               </p>
             `
             : `
-            <p>You have a license, but it is not installed on this machine yet.</p>
-            <p>Your Subscription${subscriptions.length > 1 ? 's' : ''}:</p>
+            <p>您拥有一个许可证，但它还没有注册在这个设备上.</p>
+            <p>您的订阅${subscriptions.length > 1 ? 's' : ''}:</p>
             <table style="width: 100%;">
               <tr style="opacity: 0.6">
-                <td>Since</td>
-                <td>Expires</td>
+                <td>从</td>
+                <td>倒期</td>
                 <td></td>
               </tr>
               ${subscriptions.map(asItem).join('\n')}
@@ -361,7 +361,7 @@ class HomeView {
                 // console.log('got response!')
                 // console.log(paymentJson)
 
-                alert('Approved! Thanks for your support!')
+                alert('激活成功! 感谢您的支持!')
 
                 document.body.style.cursor = ''
                 formEl.disabled = false
@@ -410,10 +410,10 @@ class HomeView {
   }
   async onUninstallClick (event) {
     event.preventDefault()
-    if (confirm('Are you sure you want to remove this license key from this machine?')) {
+    if (confirm('啊嘞!? 要从这个设备上删除此许可密钥吗?')) {
       // TODO should we ping the server?
       await trash(licenseKeyPath)
-      alert('License removed. Please restart Storyboarder.')
+      alert('许可证已移除, 你可能需要重启 Storyboarder.')
       remote.getCurrentWindow().hide()
     }
   }
@@ -445,7 +445,7 @@ class LicenseInstallView {
     this.el = this.parentEl.querySelector('#license-installer')
 
     let output = this.el.querySelector('div[data-js="output"]')
-    output.innerHTML += 'Requesting License Grant …<br/>'
+    output.innerHTML += '尝试请求许可授予…<br/>'
 
     try {
       let licenseResponse = await fetchWithTimeout(`${API_ROOT}/licenses`, {
@@ -462,13 +462,13 @@ class LicenseInstallView {
       }, 5000)
 
       if (licenseResponse.status === 200) {
-        output.innerHTML += 'Granted OK …<br/>'
+        output.innerHTML += '已批准…<br/>'
         license = await licenseResponse.json()
       } else {
         throw new Error('Could not obtain license grant')
       }
 
-      output.innerHTML += 'Downloading License …<br/>'
+      output.innerHTML += '下载许可证书…<br/>'
 
       let keyResponse = await fetchWithTimeout(`${API_ROOT}/licenses/${license.license_id}/license.key`, {
         method: 'GET',
@@ -479,7 +479,7 @@ class LicenseInstallView {
       }, 5000)
 
       if (keyResponse.status === 200) {
-        output.innerHTML += 'Installing …<br/>'
+        output.innerHTML += '注册中…<br/>'
         key = await keyResponse.text()
 
         // if exists, warn
@@ -493,9 +493,9 @@ class LicenseInstallView {
         }
         if (shouldOverwrite) {
           fs.writeFileSync(licenseKeyPath, key, { encoding: 'utf8' })
-          output.innerHTML += 'Done! Please restart Storyboarder to finish installation.'
+          output.innerHTML += '完成! 请重启 Storyboarder 来使新的许可证生效.'
         } else {
-          output.innerHTML += 'Cancelled.'
+          output.innerHTML += '终止操作.'
         }
 
       } else {
@@ -504,7 +504,7 @@ class LicenseInstallView {
 
     } catch (err) {
       handleError(err)
-      output.innerHTML += 'Server Error :(<br/>'
+      output.innerHTML += '出现错误:(<br/>'
       return
     }
 

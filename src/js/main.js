@@ -195,7 +195,7 @@ app.on('ready', async () => {
       log.error(err)
       dialog.showMessageBox({
         type: 'error',
-        message: `Whoops! An error ocurred while trying to read ${keymapPath}.\nUsing default keymap instead.\n\n${err}`
+        message: `Whoops! 尝试读取 ${keymapPath} 配置文件时出现错误.\n现在使用的是默认的快捷键配置文件.\n\n${err}`
       })
     }
   } else {
@@ -483,7 +483,7 @@ let openFile = filepath => {
       if (err) {
         dialog.showMessageBox({
           type: 'error',
-          message: '无法打开 Final Draft 文件.\n' + error.message,
+          message: '无法打开 Final Draft 剧本文件.\n' + error.message,
         })
         return
       }
@@ -527,7 +527,7 @@ let openFile = filepath => {
       if (err) {
         dialog.showMessageBox({
           type: 'error',
-          message: '无法读取 Fountain 脚本.\n' + err.message,
+          message: '无法读取 Fountain 剧本文件.\n' + err.message,
         })
         return
       }
@@ -540,7 +540,7 @@ let openFile = filepath => {
         log.error(error)
         dialog.showMessageBox({
           type: 'error',
-          message: '无法解析 Fountain 脚本.\n' + error.message,
+          message: '无法解析 Fountain 剧本文件.\n' + error.message,
         })
       }
     })
@@ -582,11 +582,11 @@ const findOrCreateProjectFolder = (scriptDataObject) => {
 
 let openDialogue = () => {
   dialog.showOpenDialog({
-    title: "打开脚本&故事板",
+    title: "打开剧本&故事板",
     buttonlabel: "打开", //这里补上按钮标签
     filters:[
       {
-        name: '脚本或故事板',
+        name: '剧本或故事板',
         extensions: [
           'storyboarder',
           'fountain',
@@ -688,7 +688,7 @@ const processFdxData = fdxObj => {
   try {
     ensureFdxSceneIds(fdxObj)
   } catch (err) {
-    throw new Error('不能将场景id添加到最终草案数据.\n' + error.message)
+    throw new Error('不能将场景id添加到最终文档里.\n' + error.message)
     return
   }
 
@@ -761,7 +761,7 @@ let processFountainData = (data, create, update) => {
         ? coll + 1
         : coll
   , 0)
-  if (scenesWithSceneNumbers === 0) throw new Error('在此 Fountain 脚本中未找到任何编号的场景.')
+  if (scenesWithSceneNumbers === 0) throw new Error('在此 Fountain 剧本文件中未找到任何编号的场景.')
 
   switch (scriptData[scriptData.length-1].type) {
     case 'section':
@@ -804,7 +804,7 @@ const onScriptFileChange = (eventType, filepath, stats) => {
       } catch (error) {
         dialog.showMessageBox({
           type: 'error',
-          message: '无法加载脚本.\n' + error.message
+          message: '无法加载此文件.\n' + error.message
         })
       }
 
@@ -826,7 +826,7 @@ const onScriptFileChange = (eventType, filepath, stats) => {
         } catch (error) {
           dialog.showMessageBox({
             type: 'error',
-            message: '无法加载脚本.\n' + error.message
+            message: '无法加载此文件.\n' + error.message
           })
         }
       })
@@ -859,7 +859,7 @@ const ensureFdxSceneIds = fdxObj => {
 
     dialog.showMessageBox({
       type: 'info',
-      message: '我们在 Final Draft 的脚本文档里中添加了场景id.',
+      message: '我们在 Final Draft 的剧本文档里中添加了场景id.',
       detail: "场景id是我们用来确保我们把故事板放在正确的位置的标记. " +
               "如果您在编辑器中打开脚本, 则应该重新加载它. " +
               "此外, 你可以随心所欲地修改你的脚本, "+
@@ -875,7 +875,7 @@ const ensureFountainSceneIds = (filePath, data) => {
   if (sceneIdScript[1]) {
     dialog.showMessageBox({
       type: 'info',
-      message: '我们在 fountain 脚本中添加了场景id.',
+      message: '我们在 fountain 剧本文件中添加了场景id.',
       detail: "场景id是我们用来确保我们把故事板放在正确的位置的标记. 如果您在编辑器中打开脚本, 则应该重新加载它. 此外, 你可以随心所欲地修改你的脚本, 但请不要更改场景id.",
       buttons: ['OK']
     })
@@ -1041,6 +1041,8 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
     if (isDev) {
       if (mainWindow) {
         mainWindow.show()
+        //尝试直接最大化
+        mainWindow.maximize();
         mainWindow.webContents.openDevTools()
       }
     }
@@ -1048,7 +1050,7 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
       title: 'Oops! ',
       type: 'error',
       message: message,
-      detail: '介个文件: ' + source + '#' + lineno + ':' + colno
+      detail: '这个文件出现了错误, 导致 Storyboarder 无法继续运行: ' + source + '\n#' + lineno + ':' + colno
     })
     log.error(message, source, lineno, colno)
     analytics.exception(message, source, lineno)
@@ -1056,6 +1058,10 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
 
   ipcMain.on('errorInWindow', onErrorInWindow)
   mainWindow.loadURL(`file://${__dirname}/../main-window.html`)
+  
+  //一上来就打开DevTool
+  mainWindow.webContents.openDevTools();
+  
   mainWindow.once('ready-to-show', () => {
     mainWindow.webContents.send('load', [filename, scriptData, locations, characters, boardSettings, currentPath])
     isLoadingProject = false
@@ -1194,7 +1200,7 @@ let attemptLicenseVerification = async () => {
     log.error(err)
     dialog.showMessageBox({
       type: 'error',
-      message: `An error occurred while checking the license key.\n\n${err}`
+      message: `检查许可密钥时发生错误.\n\n${err}`
     })
   }
 }
@@ -1496,9 +1502,15 @@ ipcMain.on('workspaceReady', event => {
   if (!mainWindow) return
   
   if (os.platform() == 'win32') {
-    setTimeout(()=> {mainWindow.show()}, 1000)
+    setTimeout(()=> {
+      mainWindow.show()
+      //尝试直接最大化
+      mainWindow.maximize();
+      }, 1000)
   } else {
     mainWindow.show()
+    //尝试直接最大化
+    mainWindow.maximize();
   }
 
   // only after the workspace is ready will it start getting future focus events

@@ -154,16 +154,16 @@ view.loading = (model) => {
   // TODO reset everything
 
   return ({
-    overview: 'Loading …',
-    instructions: 'Loading …'
+    overview: '加载中…',
+    instructions: '加载中…'
   })
 }
 view.processing = (model) => {
   // TODO reset everything?
 
   return ({
-    overview: 'Processing …',
-    instructions: 'Processing …'
+    overview: '处理中…',
+    instructions: '处理中…'
   })
 }
 view.cornerPointsEditor = (model) => {
@@ -221,12 +221,12 @@ view.cornerPointsEditor = (model) => {
 }
 view.qrCodeInput = (model) => {
   return ({
-    overview: 'I couldn’t detect the QR code for this worksheet. ' +
+    overview: '我无法检测到此工作表的二维码. ' +
               (
                 model.lastValidQrCode.length
-                ? 'I guessed a QR code based on the last working one you gave me. '
+                ? '我根据你之前给我的最后一个有效的二维码进行了猜测. '
                 : ''
-              ) + 'You can find the correct QR code to the left of the QR graphic on the printed worksheet.',
+              ) + '你可以在打印的工作表上, 二维码图形的左侧找到正确的二维码.',
     form: `
       <form onsubmit="return actions.validateQrCode()">
         <div class="row">
@@ -450,7 +450,7 @@ actions.validateQrCode = () => {
       )
     }, 100)
   } else {
-    alert('Hmm, I couldn’t use that QR code. Are you sure you typed in the right value?')
+    alert('Hmm, 我无法应用那个二维码. 您确定输入了正确的值吗?')
   }
 
   return false

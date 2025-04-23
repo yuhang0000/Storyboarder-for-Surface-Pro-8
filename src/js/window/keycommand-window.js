@@ -41,9 +41,10 @@ const CODE_MODIFIER_MAP = {
   'Alt': IS_MAC ? 'Option' : 'Alt', // \u2325
 }
 
+//这里把 ◄ 换成 ◀
 const KEY_MAP = {
-  'Left': '◄',
-  'Right': '►',
+  'Left': '◀',
+  'Right': '▶',
   'Up': '▲',
   'Down': '▼',
   'CapsLock': 'caps lock',
@@ -106,74 +107,74 @@ let keyMapRight = [
 ]
 
 let commands = [
-  ["File", [
-      ['Save', keystrokeFor("menu:file:save")],
-      ['Open...', keystrokeFor("menu:file:open")],
-      ['<strong>Export Animated GIF</strong>', keystrokeFor("menu:file:export-animated-gif")],
-      ['<strong>Print a Worksheet...</strong>', keystrokeFor("menu:file:print-worksheet")],
-      ['Import Worksheets...', keystrokeFor("menu:file:import-worksheets")],
-      ['<strong>Import Images...</strong>', keystrokeFor("menu:file:import-images")],
+  ["文件", [
+      ['保存', keystrokeFor("menu:file:save")],
+      ['打开...', keystrokeFor("menu:file:open")],
+      ['<strong>导出为 GIF 动图</strong>', keystrokeFor("menu:file:export-animated-gif")],
+      ['<strong>打印为工作表...</strong>', keystrokeFor("menu:file:print-worksheet")],
+      ['导入工作表...', keystrokeFor("menu:file:import-worksheets")],
+      ['<strong>导入图像...</strong>', keystrokeFor("menu:file:import-images")],
     ]
   ],
-  ["Edit", [
-      ['<strong>Undo</strong>', keystrokeFor("menu:edit:undo")],
-      ['Redo', keystrokeFor("menu:edit:redo")],
-      ['Copy', keystrokeFor("menu:edit:copy")],
-      ['Paste', keystrokeFor("menu:edit:paste")],
+  ["编辑", [
+      ['<strong>撤销</strong>', keystrokeFor("menu:edit:undo")],
+      ['恢复', keystrokeFor("menu:edit:redo")],
+      ['复制', keystrokeFor("menu:edit:copy")],
+      ['粘贴', keystrokeFor("menu:edit:paste")],
       // ['Select All', keystrokeFor("menu:edit:select-all")],
     ]
   ],
-  ["Navigation", [
-      ['<strong>Previous Board</strong>', keystrokeFor("menu:navigation:previous-board")],
-      ['<strong>Next Board</strong>', keystrokeFor("menu:navigation:next-board")],
-      ['Previous Scene', keystrokeFor("menu:navigation:previous-scene")],
-      ['Next Scene', keystrokeFor("menu:navigation:next-scene")],
+  ["导航", [
+      ['<strong>上一个画板</strong>', keystrokeFor("menu:navigation:previous-board")],
+      ['<strong>下一个画板</strong>', keystrokeFor("menu:navigation:next-board")],
+      ['上一个场景', keystrokeFor("menu:navigation:previous-scene")],
+      ['下一个场景', keystrokeFor("menu:navigation:next-scene")],
     ]
   ],
-  ["Boards", [
-      ['<strong>New Board</strong>', keystrokeFor("menu:boards:new-board")],
-      ['New Board Before', keystrokeFor("menu:boards:new-board-before")],
-      ['<strong>Delete Board(s)</strong>', keystrokeFor("menu:boards:delete-boards")],
-      ['Delete & Go Forward', keystrokeFor("menu:boards:delete-boards-go-forward")],
-      ['<strong>Duplicate Board</strong>', keystrokeFor("menu:boards:duplicate")],
-      ['Reorder Left', keystrokeFor("menu:boards:reorder-left")],
-      ['Reorder Right', keystrokeFor("menu:boards:reorder-right")],
-      ['Toggle Board as New Shot', keystrokeFor("menu:boards:toggle-new-shot")],
+  ["画板", [
+      ['<strong>创建新画板</strong>', keystrokeFor("menu:boards:new-board")],
+      ['在前面创建新画板', keystrokeFor("menu:boards:new-board-before")],
+      ['<strong>删除画板</strong>', keystrokeFor("menu:boards:delete-boards")],
+      ['删除画板并向前移动', keystrokeFor("menu:boards:delete-boards-go-forward")],
+      ['<strong>创建画板副本</strong>', keystrokeFor("menu:boards:duplicate")],
+      ['向左重新排序', keystrokeFor("menu:boards:reorder-left")],
+      ['向右重新排序', keystrokeFor("menu:boards:reorder-right")],
+      ['将画板标记为新镜头', keystrokeFor("menu:boards:toggle-new-shot")],
     ]
   ],
-  ["Tools", [
-      ['<strong>Light Pencil</strong>', keystrokeFor("menu:tools:light-pencil")],
-      ['Pencil', keystrokeFor("menu:tools:pencil")],
-      ['<strong>Pen</strong>', keystrokeFor("menu:tools:pen")],
-      ['Brush', keystrokeFor("menu:tools:brush")],
-      ['Note Pen', keystrokeFor("menu:tools:note-pen")],
-      ['Eraser', keystrokeFor("menu:tools:eraser")],
-      ['<strong>Clear All Layers</strong>', keystrokeFor("menu:tools:clear-all-layers")],
-      ['Clear Layer', keystrokeFor("menu:tools:clear-layer")],
-      ['<strong>Smaller Brush</strong>', keystrokeFor("drawing:brush-size:dec")],
-      ['<strong>Larger Brush</strong>', keystrokeFor("drawing:brush-size:inc")],
-      ['Use Palette Color 1', keystrokeFor("menu:tools:palette-color-1")],
-      ['Use Palette Color 2', keystrokeFor("menu:tools:palette-color-2")],
-      ['Use Palette Color 3', keystrokeFor("menu:tools:palette-color-3")],
-      ['Flip Horizontal', keystrokeFor("menu:tools:flip-horizontal")],
-      ['<strong>Edit in Photoshop</strong>', keystrokeFor("menu:tools:edit-in-photoshop")],
+  ["工具", [
+      ['<strong>软铅笔</strong>', keystrokeFor("menu:tools:light-pencil")],
+      ['铅笔', keystrokeFor("menu:tools:pencil")],
+      ['<strong>钢笔</strong>', keystrokeFor("menu:tools:pen")],
+      ['刷子', keystrokeFor("menu:tools:brush")],
+      ['记号笔', keystrokeFor("menu:tools:note-pen")],
+      ['擦子', keystrokeFor("menu:tools:eraser")],
+      ['<strong>清除所有图层</strong>', keystrokeFor("menu:tools:clear-all-layers")],
+      ['清除当前图层', keystrokeFor("menu:tools:clear-layer")],
+      ['<strong>增大笔刷大小</strong>', keystrokeFor("drawing:brush-size:dec")],
+      ['<strong>减少笔刷大小</strong>', keystrokeFor("drawing:brush-size:inc")],
+      ['使用 1 号调色板', keystrokeFor("menu:tools:palette-color-1")],
+      ['使用 2 号调色板', keystrokeFor("menu:tools:palette-color-2")],
+      ['使用 3 号调色板', keystrokeFor("menu:tools:palette-color-3")],
+      ['水平翻转', keystrokeFor("menu:tools:flip-horizontal")],
+      ['<strong>在 Photoshop 上编辑</strong>', keystrokeFor("menu:tools:edit-in-photoshop")],
     ]
   ],
-  ["View", [
-      ['<strong>Cycle View Mode</strong>', keystrokeFor("menu:view:cycle-view-mode")],
-      ['Reverse Cycle View Mode', keystrokeFor("menu:view:cycle-view-mode-reverse")],
-      ['Toggle Onion Skin', keystrokeFor("menu:view:onion-skin")],
-      ['Toggle Captions', keystrokeFor("menu:view:toggle-captions")],
-      ['Toggle Fullscreen', keystrokeFor("menu:view:toggle-full-screen")],
+  ["视图", [
+      ['<strong>切换视图</strong>', keystrokeFor("menu:view:cycle-view-mode")],
+      ['反向切换视图', keystrokeFor("menu:view:cycle-view-mode-reverse")],
+      ['切换洋葱皮', keystrokeFor("menu:view:onion-skin")],
+      ['切换字幕', keystrokeFor("menu:view:toggle-captions")],
+      ['全屏', keystrokeFor("menu:view:toggle-full-screen")],
     ]
   ],
-  ["Window", [
-      ['Close Window', keystrokeFor("menu:window:close")],
-      ['Minimize Window', keystrokeFor("menu:window:minimize")],
+  ["窗口", [
+      ['退出 StoryBoarder', keystrokeFor("menu:window:close")],
+      ['最小化窗口', keystrokeFor("menu:window:minimize")],
     ]
   ],
-  ["Help", [
-      ['Show me a story tip!', keystrokeFor("menu:help:show-story-tip")],
+  ["帮助", [
+      ['获取一些提示!', keystrokeFor("menu:help:show-story-tip")],
     ]
   ],
 

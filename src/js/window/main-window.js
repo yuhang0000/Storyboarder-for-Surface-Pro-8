@@ -1,3 +1,6 @@
+// debugger; //一上来就添加断点是吧
+// alert("Debug 模式");
+
 const {ipcRenderer, shell, remote, nativeImage, clipboard} = require('electron')
 const { app } = require('electron').remote
 const child_process = require('child_process')
@@ -666,7 +669,7 @@ const commentOnLineMileage = (miles) => {
         "我们来看看进度如何, 还有多少分镜需要完成呢?",
         "越来越完美了!",
         "或许可以考虑开始下一个场景了?",
-        "你可以考虑把这张发到推特上吧，我真的喜欢这件杰作.",
+        "你可以考虑把这张发到推特上吧, 我真的喜欢这件杰作.",
       ]
       message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
       sfx.error()
@@ -688,7 +691,7 @@ const commentOnLineMileage = (miles) => {
       otherMessages = [
         "加油!",
         "虽然你可能还在追求完美的路上, 但请记住, 每个艺术家都需要休息来保持最佳状态. 也许.. 考虑一下短暂的休息吗? 它能帮助你回来时更有灵感哦!",
-        "我完全理解那种感觉，但你知道吗？从旁观者的角度来看，你的作品已经有了很大的进步。每一个细节都展现出了你的用心和才华.",
+        "我完全理解那种感觉, 但你知道吗? 从旁观者的角度来看, 你的作品已经有了很大的进步. 每一个细节都展现出了你的用心和才华.",
         "别忘了, 艺术不仅仅是终点, 更是旅程. 享受这个过程, 你会发现每一次尝试都是成长的机会.",
         "zzz",
       ]
@@ -745,7 +748,7 @@ const migrateScene = () => {
   if (foldernameContainsStringBackup && isAlongside) {
     // we don't need to migrate
     remote.dialog.showMessageBox({
-      message: "This appears to be a backup of a scene created with an older version of Storyboarder. It will not be migrated. Some layers won’t appear correctly in this version of Storyboarder."
+      message: "这似乎是用旧版本的 Storyboarder 创建的场景的备份. 它不会被迁移. 在目前这个版本的Storyboarder中, 有些层不会正确显示."
     })
     return false
   }
@@ -757,7 +760,7 @@ const migrateScene = () => {
   if (fs.existsSync(dst)) {
     remote.dialog.showMessageBox({
       type: 'error',
-      message: `Tried to migrate scene to new Storyboarder format but a backup already exists.\n\n${dst}\n\nPlease move or rename the backup folder and retry.`
+      message: `尝试将场景迁移到新的故事板格式, 但已经存在一份备份导致被占用.\n\n${dst}\n\n请移动或重命名备份文件夹后重试.`
     })
     window.close()
     throw new Error('Could not migrate')
@@ -787,7 +790,7 @@ const migrateScene = () => {
         log.warn('Found an old main layer but fill already exists')
         remote.dialog.showMessageBox({
           type: 'error',
-          message: 'Error while migrating board: fill layer already exists'
+          message: '迁移画板时出错: 已存在一份填充层.'
         })
       } else {
         // ensure board.layers exists
@@ -900,7 +903,7 @@ const loadBoardUI = async () => {
   if (!SketchPane.canInitialize()) {
     remote.dialog.showMessageBox({
       type: 'error',
-      message: 'Sorry, Storyboarder is not supported on your device because WebGL could not be initialized.'
+      message: '抱歉, 你的设备不支持 Storyboarder , 因为 WebGL 无法初始化.'
     })
     window.close()
     return
@@ -912,7 +915,7 @@ const loadBoardUI = async () => {
     store
   )
   storyboarderSketchPane.onWebGLContextLost = () => {
-    alert('An unexpected WebGL error occurred and Storyboarder could not continue.')
+    alert('发生意外的 WebGL 错误, Storyboarder 停止运行.')
     window.close()
   }
   await storyboarderSketchPane.load()
@@ -944,7 +947,7 @@ const loadBoardUI = async () => {
 
     for (let file of files) {
       if (path.extname(file.name).match(/\.aif*/)) {
-        notifications.notify({ message: `哦! 抱歉, storyboarder 还不能读取AIFF文件.`, timing: 5 })
+        notifications.notify({ message: `哦! 抱歉, storyboarder 还不能读取 AIFF 文件.`, timing: 5 })
         return
       }
 
@@ -1530,12 +1533,12 @@ const loadBoardUI = async () => {
       // ...prompt them, to see if they really want to remove the link
       remote.dialog.showMessageBox({
         type: 'question',
-        message: 'This board was edited in Photoshop and linked to a PSD file. ' +
-                 'What would you like to do?',
+        message: '这幅画板本应该是在 Photoshop 中编辑的, 因为它绑定了一个 PSD 文档. ' +
+                 '想来做点什么吗?',
         buttons: [
-          'Open in Photoshop', // 0
-          'Draw in Storyboarder', // 1
-          'Cancel' // 2
+          '在 Photoshop 上编辑', // 0
+          '在 Storyboarder 上编辑', // 1
+          '算了' // 2
         ],
         defaultId: 2
       })
@@ -1547,19 +1550,19 @@ const loadBoardUI = async () => {
           // Draw in Storyboarder
           remote.dialog.showMessageBox({
             type: 'question',
-            message: 'If you draw, Storyboarder will stop watching ' +
-                    'Photoshop for changes, and unlink the PSD from ' +
-                    'this board. Are you absolutely sure?',
+            message: '如果你想继续在此画板绘画的话, Storyboarder 将会停止监听在 ' +
+                    'Photoshop 上的更改, 并且解除 PSD 文档的绑定. ' +
+                    '要继续吗?',
             buttons: [
-              'Unlink and Draw', // 0
-              'Cancel' // 1
+              '解除绑定', // 0
+              '还是算了' // 1
             ],
             defaultId: 1
           })
           .then(({ response }) => {
             if (response === 0) {
               // Unlink and Draw
-              notifications.notify({ message: `停止观察\n${board.link}\n的变化.` })
+              notifications.notify({ message: `停止监听\n${board.link}\n在 Photoshop 上的变化.` })
               linkedFileManager.removeBoard(board)
               delete board.link
               markBoardFileDirty()
@@ -1875,13 +1878,13 @@ const loadBoardUI = async () => {
         const { response } = await remote.dialog.showMessageBox({
           type: 'question',
           buttons: ['是', '否'],
-          title: '问问',
-          message: `这个项目中已经存在一个名为 ${path.basename(newpath)} 的文件. 要覆盖它吗?`
+          title: '覆盖文件',
+          message: `这个项目中已经存在一个名为 \"${path.basename(newpath)}\" 的文件.\n要覆盖它吗?`
         })
         shouldOverwrite = (response === 0)
       }
       if (!shouldOverwrite) {
-        notifications.notify({ message: '取消了', timing: 5 })
+        notifications.notify({ message: '取消覆盖', timing: 5 })
         return
       }
 
@@ -1919,10 +1922,10 @@ const loadBoardUI = async () => {
 
       remote.dialog.showOpenDialog(
         {
-          title: 'Select Audio File',
+          title: '选择音频文件',
           filters: [
             {
-              name: 'Audio',
+              name: '音频文件',
               extensions: ALLOWED_AUDIO_FILE_EXTENSIONS
             }
           ]
@@ -1944,11 +1947,11 @@ const loadBoardUI = async () => {
 
       const { response } = await remote.dialog.showMessageBox({
         type: 'question',
-        buttons: ['Yes', 'No'],
-        title: 'Confirm',
-        message: 'Are you sure?\n' +
-                 'Audio will be removed from this board.\n' +
-                 'NOTE: File will not be deleted from disk.'
+        buttons: ['是', '否'],
+        title: '移除音频',
+        message: '确定要移除这段音频吗?\n' +
+                 '它将不再显示在项目中了.\n' +
+                 'PS: 该音频不会从磁盘里删除.'
       })
 
       const shouldClear = (response === 0)
@@ -2033,7 +2036,7 @@ const loadBoardUI = async () => {
 
       // name to match uid
       let datestamp = Date.now() // (new Date()).toISOString()
-      let newFilename = `${board.uid}-audio-${datestamp}.wav`
+      let newFilename = `${board.uid}-Audio-${datestamp}.wav`
 
       // copy to project folder
       let newPath = path.join(boardPath, 'images', newFilename)
@@ -2408,7 +2411,7 @@ let saveBoardFile = (opt = { force: false }) => {
         log.info('saved board file:', boardFilename)
       } catch (err) {
         log.error(err)
-        alert('Could not save project.\n' + err)
+        alert('无法保存项目.\n' + err)
       }
     }
   }
@@ -2805,11 +2808,13 @@ let openInEditor = async () => {
           // file exists but link does not exist
           // we need to know if user wants us to overwrite existing file before linking
           shouldOverwrite = false
+          //嗯, 这里截取的文件名不对
+          let aaa = psdPath.split("\\");
           const { response } = await remote.dialog.showMessageBox({
             type: 'question',
-            title: `Overwrite ${path.extname(psdPath)}?`,
-            message: `A PSD file already exists for this board. Overwrite it?`,
-            buttons: ['Yes, overwrite', `No, open existing PSD`]
+            title: "覆盖文档 " + aaa[aaa.length - 1] + " ?",
+            message: `此画板已经存在一份绑定的 PSD 文档, 需要覆盖它吗?`,
+            buttons: ['是的, 覆盖它', `免了, 编辑现有 PSD 文档`]
           })
           shouldOverwrite = (response === 0)
         }
@@ -2818,8 +2823,8 @@ let openInEditor = async () => {
           // file doesn’t exist but link exists
           let shouldOverwrite = true
           notifications.notify({
-            message:  `[WARNING] 找不到链接的文件: \n${board.link}\n` +
-                      `存放在: \n${path.basename(psdPath)} .`
+            message:  `[WARNING] 找不到绑定的 PSD 文件: \n${board.link}\n` +
+                      `它本应该存放在: \n${path.basename(psdPath)} .`
           })
           // TODO could check to see if psdPath and board.link differ? that would be a weird edge case
         } else {
@@ -2903,7 +2908,7 @@ let openInEditor = async () => {
 
   } catch (error) {
     log.error(error)
-    notifications.notify({ message: '[WARNING] 在编辑器中打开文件时出错.' })
+    notifications.notify({ message: '[WARNING] 在 Photoshop 中打开文件时出错.' })
     notifications.notify({ message: error.toString() })
     return
   }
@@ -2917,8 +2922,8 @@ const refreshLinkedBoardByFilename = async (filename, options = { forceReadFromF
 
   if (!board) {
     let message =
-      '尝试从外部编辑器更新,' +
-      '但没有链接到任何板的文件: ' + filename
+      '尝试监听在 Photoshop 上的变更, ' +
+      '但是没有任何画板绑定该 PSD 文档: ' + filename
 
     log.info(message)
     notifications.notify({
@@ -5592,7 +5597,7 @@ const exportAnimatedGif = async () => {
 
     let exportPath = await exporter.exportAnimatedGif(boards, boardSize, 888, boardFilename, shouldWatermark, boardData, watermarkSrc)
     notifications.notify({
-      message: '好耶, 我们把你所选的画板导出成GIF动图啦。和你的朋友分享吧！把它发布到你的推特或者你的博客上.',
+      message: '好耶, 我们把你所选的画板导出成GIF动图啦. 和你的朋友分享吧! 把它发布到你的推特或者你的博客上.',
       timing: 20
     })
     sfx.positive()
@@ -6344,7 +6349,7 @@ const welcomeMessage = () => {
   otherMessages = [
     "Hey! 这里有一句我绝对不是刚刚从网上找来的名言:",
     "我觉得你现在的状态超级棒!",
-    "如果你有对 Storyboarder 的想法，随时告诉我们吧！我们很想听听你的意见.",
+    "如果你有对 Storyboarder 的想法, 随时告诉我们吧! 我们很想听听你的意见.",
     "",
   ]
   message.push(otherMessages[Math.floor(Math.random()*otherMessages.length)])
@@ -6526,7 +6531,7 @@ const saveAsFolder = async () => {
       log.warn('Missing Files', listing)
       remote.dialog.showMessageBox({
         type: 'warning',
-        message: `[WARNING] Some expected files are missing from the project:\n\n${listing}`
+        message: `[WARNING] 项目中缺少一些预期的文件:\n\n${listing}`
       })
     }
 
@@ -6605,24 +6610,24 @@ const startWebUpload = async () => {
   await saveImageFile()
   saveBoardFile()
 
-  notifications.notify({ message: 'Uploading to Storyboarders.com. This might take a while …' })
+  notifications.notify({ message: '尝试上传到 Storyboarders.com. 这可能需要点时间来完成…' })
 
   // let the notification appear
   await new Promise(resolve => setTimeout(resolve, 1000))
 
   try {
     let result = await exporterWeb.uploadToWeb(boardFilename)
-    notifications.notify({ message: 'Upload complete!' })
+    notifications.notify({ message: '上传完成!' })
     log.info('Uploaded to', result.link)
     remote.shell.openExternal(result.link)
   } catch (err) {
     if (err.name === 'StatusCodeError' && err.statusCode === 403) {
-      notifications.notify({ message: 'Oops! Your credentials are invalid or have expired. Please try signing in again to upload.' })
+      notifications.notify({ message: 'Oops! 您的登录信息已失效. 请尝试重新登录并上传.' })
       prefsModule.set('auth', undefined)
       showSignInWindow()
     } else {
       log.error(err)
-      notifications.notify({ message: 'Whoops! An error occurred while attempting to upload.' })
+      notifications.notify({ message: 'Whoops! 尝试上传时发生错误.' })
     }
   }
 }
@@ -6650,16 +6655,16 @@ const exportZIP = async () => {
       let listing = missing.join('\n')
       log.warn('Missing Files', listing)
       notifications.notify({
-        message: `[WARNING] Some expected files are missing from the project and could not be added to the ZIP:\n\n${listing}`
+        message: `[WARNING] 项目中缺少一些预期的文件, 无法添加到压缩包中:\n\n${listing}`
       })
     }
 
-    notifications.notify({ message: `Done.` })
+    notifications.notify({ message: `完成喽!` })
     shell.showItemInFolder(exportFilePath)
   } catch (err) {
     log.error(err)
     notifications.notify({ message: `[ERROR] ${err.message}` })
-    notifications.notify({ message: `Failed.` })
+    notifications.notify({ message: `失败哩.` })
   }
 }
 
@@ -6673,7 +6678,7 @@ const reloadScript = async (args) => { // [scriptData, locations, characters]
   // goto the board and render the drawer
   renderScene()
 
-  notifications.notify({ message: 'Script has changed. Reloaded.'})
+  notifications.notify({ message: '剧本发生变更, 尝试重新加载.'})
 }
 
 const updateSceneFromScript = async () => {
@@ -6708,7 +6713,7 @@ const TimelineModeControlView = ({ mode = 'sequence', show = false }) => {
         ['svg', { className: 'icon' },
           ['use', { xlinkHref: './img/symbol-defs.svg#timeline-boards' }]
         ],
-        ['span', 'Boards']
+        ['span', '画板']
       ],
       ['div.spacer'],
       ['div.btn', {
@@ -6718,7 +6723,7 @@ const TimelineModeControlView = ({ mode = 'sequence', show = false }) => {
         ['svg', { className: 'icon' },
           ['use', { xlinkHref: './img/symbol-defs.svg#timeline-timeline' }]
         ],
-        ['span', 'Timeline']
+        ['span', '时间轴']
       ]
     ]
   )
@@ -6776,7 +6781,7 @@ ipcRenderer.on('flipBoard', (e, arg)=> {
   if (!textInputMode) {
     storyboarderSketchPane.flipLayers(arg)
     sfx.playEffect('metal')
-    notifications.notify({message: 'I flipped the board.', timing: 5})
+    notifications.notify({message: '我水平翻转了一个画板 :P', timing: 5})
   }
 })
 
@@ -6925,9 +6930,9 @@ ipcRenderer.on('exportPrintablePdf', (event, sourcePath, filename) => {
     fs.writeFileSync(outputPath, fs.readFileSync(sourcePath))
 
     if (filename == 'Worksheet') {
-      notifications.notify({message: "A Worksheet PDF has been exported.", timing: 20})
+      notifications.notify({message: "已导出工作表PDF.", timing: 20})
     } else {
-      notifications.notify({message: "A Storyboard PDF has been exported.", timing: 20})
+      notifications.notify({message: "已导出故事板PDF.", timing: 20})
     }
     sfx.positive()
     shell.showItemInFolder(outputPath)
@@ -6936,9 +6941,9 @@ ipcRenderer.on('exportPrintablePdf', (event, sourcePath, filename) => {
     log.error('File exists')
     sfx.error()
     if (filename == 'Worksheet') {
-      notifications.notify({ message: "Could not export Worksheet PDF.", timing: 20 })
+      notifications.notify({ message: "无法导出工作表PDF.", timing: 20 })
     } else {
-      notifications.notify({message: "Could not export Storyboard PDF.", timing: 20})
+      notifications.notify({ message: "无法导出故事板PDF.", timing: 20 })
     }
   }
 })
@@ -7003,7 +7008,7 @@ ipcRenderer.on('importNotification', () => {
 
   let ip = getIpAddress()
   if (ip) {
-    let message = "Did you know that you can import directly from your phone?\n\nOn your mobile phone, go to the web browser and type in: \n\n" + ip + ":1888"
+    let message = "我知道有时候要把手机里的资料传上来会有点小麻烦. 不过有个简单的方法哦! 你只需要在手机上打开任何一个浏览器, 然后在地址栏上输入: \n" + ip + ":1888\n这样就能轻松访问啦, 来试试吧!"
     notifications.notify({message: message, timing: 60})
   }
 })
@@ -7133,7 +7138,7 @@ const saveToBoardFromShotGenerator = async ({ uid, data, images }) => {
 
   if (index === -1) {
     log.error(`board with uid ${uid} does not exist`)
-    alert('Could not save shot: missing board.')
+    alert('无法保存快照: 画板缺失.')
     return
   }
 

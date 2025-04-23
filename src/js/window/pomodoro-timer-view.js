@@ -325,7 +325,8 @@ class PomodorTimerView extends EventEmitter {
   }
 
   tweet() {
-    shell.openExternal('https://twitter.com/intent/tweet?text=' + encodeURIComponent('I just finished a sketch sprint with Storyboarder! #sketchsprint'))
+    //这里好像是推特分享连接欸
+    shell.openExternal('https://twitter.com/intent/tweet?text=' + encodeURIComponent('我刚刚用 StoryBoarder 画出了一份草图耶! #sketchsprint'))
   }
   
   getStartTimeFriendly() {

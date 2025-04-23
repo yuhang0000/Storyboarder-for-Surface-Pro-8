@@ -41,7 +41,7 @@ const onSubmit = async event => {
   event.preventDefault()
 
   event.target.querySelector('button').disabled = true
-  event.target.querySelector('button').innerHTML = 'Signing In …'
+  event.target.querySelector('button').innerHTML = '登录中…'
 
   let url = `${exporterWeb.API_URI}/login`
 
@@ -63,13 +63,13 @@ const onSubmit = async event => {
     remote.getCurrentWindow().hide()
   } catch (err) {
     if (err.statusCode === 403) {
-      window.alert('That email/password combination was not accepted.')
+      window.alert('这个邮箱/密码输入错误, 无法登录, 请重试.')
     } else {
-      window.alert('Whoops! An error occurred.\n' + err.message)
+      window.alert('Whoops! 发生错误.\n' + err.message)
     }
 
     event.target.querySelector('button').disabled = false
-    event.target.querySelector('button').innerHTML = 'Sign In'
+    event.target.querySelector('button').innerHTML = '登录'
   }
 }
 
