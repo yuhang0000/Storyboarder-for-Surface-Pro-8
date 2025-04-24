@@ -64,9 +64,9 @@
 }
 
 #pomodoro-timer-title {
-  font-size: 2em;
+  font-size: 1.5em;
   line-height: 1em;
-  margin: 1em 0 0 0;
+  margin: 0.5em 0 0 0;
   color: #999;
 }
 
@@ -84,6 +84,10 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
   text-align: center;
   font-weight: bold;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
 #pomodoro-timer-minutes-label {
@@ -95,10 +99,13 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 4em;
   font-weight: bold;
   color: #aaa;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding: 1px 2px;
 }
 
 .pomodoro-timer-success {
-  font-size: 4em;
+  font-size: 2em;
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -110,7 +117,7 @@ input[type=number]::-webkit-outer-spin-button {
 .pomodoro-timer-button {
   background: #3a3a3a;
   border-radius: 4px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   font-size: 1.25em;
   border-width: 0px;
   color: #aaa;

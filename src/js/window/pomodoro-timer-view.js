@@ -71,13 +71,13 @@ class PomodorTimerView extends EventEmitter {
     switch(newState) {
       case "rest":
         content = `
-          <h3 id="pomodoro-timer-title">Sketch Sprint</h3>
+          <h3 id="pomodoro-timer-title">记录延时快照</h3>
           <input id="pomodoro-timer-minutes-input" class="pomodoro-timer-minutes-input" type="number" id="minutesInput" value="${this.pomodoroTimerMinutes}" min="1" max="500">
-          <div id="pomodoro-timer-minutes-label">minutes</div>
+          <div id="pomodoro-timer-minutes-label">分钟</div>
           <div id="pomodoro-timer-start-button" class="pomodoro-timer-button">
-            <div class="pomodoro-timer-button-copy">Start</div><svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon"><use xlink:href="./img/button-play-pause.svg#icon-play"></use></svg>
+            <div class="pomodoro-timer-button-copy">开始</div><svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon"><use xlink:href="./img/button-play-pause.svg#icon-play"></use></svg>
           </div>
-          <div id="pomodoro-timer-recordings-label">Latest Timelapses</div>
+          <div id="pomodoro-timer-recordings-label">上一次的延时快照</div>
           <div id="pomodoro-timer-recordings">
           </div>
         `
@@ -109,14 +109,14 @@ class PomodorTimerView extends EventEmitter {
         break
       case "running":
         content = `
-          <h3 id="pomodoro-timer-title">Sketch Sprint</h3>
+          <h3 id="pomodoro-timer-title">记录延时快照</h3>
           <div id="pomodoro-timer-remaining" class="pomodoro-timer-remaining">${this.getStartTimeFriendly()}</div>
-          <div id="pomodoro-timer-minutes-label">minutes</div>
+          <div id="pomodoro-timer-minutes-label">倒计时</div>
           <div id="pomodoro-timer-cancel-button"  class="pomodoro-timer-button">
-            <div class="pomodoro-timer-button-copy">Cancel</div>
+            <div class="pomodoro-timer-button-copy">取消</div>
             <svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon"><use xlink:href="./img/button-play-pause.svg#icon-stop"></use></svg>
           </div>
-          <div id="pomodoro-timer-recordings-label">Latest Timelapses</div>
+          <div id="pomodoro-timer-recordings-label">上一次的延时快照</div>
           <div id="pomodoro-timer-recordings">
           </div>
         `
@@ -130,24 +130,23 @@ class PomodorTimerView extends EventEmitter {
         break
       case "completed":
         content = `
-          <h3 id="pomodoro-timer-title">Sketch Sprint</h3>
+          <h3 id="pomodoro-timer-title">记录延时快照</h3>
           <div id="pomodoro-timer-success" class="pomodoro-timer-success">
             <div id="pomodoro-timer-success-headline">
-              U R<br/>
-              SMART!
+              完成啦!
             </div>
           </div>
           <div id="pomodoro-timer-recordings">
           </div>
           <div id="pomodoro-timer-success-message">
-            Or at least smarter than I am. (I'm a computer.) That's a great session you just had, and that's a great timelapse.
+            您辛苦啦, 一个人的努力总是充满挑战. (毕竟你是独自完成了这一切.) <br>你刚才的工作非常出色, 时间管理也非常棒. 祝贺你完美地完成了工作! <br>不妨把这份成果分享出去, 让更多人看到你的努力和成就吧!
           </div>
           <div id="pomodoro-timer-tweet-button"  class="pomodoro-timer-button">
-            <div class="pomodoro-timer-button-copy">Tweet</div>
+            <div class="pomodoro-timer-button-copy">Twtter</div>
             <svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon" style="height:25px; "><use xlink:href="./img/social.svg#icon-twitter"></use></svg>
           </div>
           <div id="pomodoro-timer-continue-button"  class="pomodoro-timer-button">
-            <div class="pomodoro-timer-button-copy">Continue</div>
+            <div class="pomodoro-timer-button-copy">完成</div>
           </div>
         `
         this.innerEl.innerHTML = content
@@ -198,7 +197,7 @@ class PomodorTimerView extends EventEmitter {
           shell.showItemInFolder(event.target.dataset.filepath)
         })
       }
-      this.el.querySelector('#pomodoro-timer-recordings-label').innerHTML = `Latest Timelapses`
+      this.el.querySelector('#pomodoro-timer-recordings-label').innerHTML = `上一次的延时快照`
       this.el.querySelector('#pomodoro-timer-recordings-label').style.display = `block`
     } else {
       this.el.querySelector('#pomodoro-timer-recordings-label').innerHTML = ``
@@ -326,7 +325,7 @@ class PomodorTimerView extends EventEmitter {
 
   tweet() {
     //这里好像是推特分享连接欸
-    shell.openExternal('https://twitter.com/intent/tweet?text=' + encodeURIComponent('我刚刚用 StoryBoarder 画出了一份草图耶! #sketchsprint'))
+    shell.openExternal('https://twitter.com/intent/tweet?text=' + encodeURIComponent('我刚刚用 StoryBoarder 完成了一份草图耶! #sketchsprint'))
   }
   
   getStartTimeFriendly() {

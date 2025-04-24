@@ -31,9 +31,9 @@ class Exporter {
         null,
         {
           type: 'warning',
-          title: 'Are You Sure?',
-          message: `Clean Up deletes unused image files, reducing file size. It cannot be undone. Are you sure you want to do this?`,
-          buttons: ['Yes', 'No'],
+          title: '清理...',
+          message: `清理删除未使用的图像文件, 这确实是可以减少文件大小, 但这是无法挽回的. 你确定要这么做吗?`,
+          buttons: ['是', '否'],
       }).then(({ response }) => {
         if (response == 1) {
           reject()
