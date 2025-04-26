@@ -1,5 +1,5 @@
+
 const electron = require('electron')
-const remote = require('@electron/remote')
 const { webFrame } = electron
 const SettingsService = require('../windows/shot-generator/SettingsService')
 const AutoUIScaler = require('./AutoUIScaler')
@@ -19,7 +19,7 @@ const setScale = ( value ) => {
 }
 
 const updateScaleBoundaries = () => {
-    let currentBound = remote.getCurrentWindow().getBounds()
+    let currentBound = electron.remote.getCurrentWindow().getBounds()
     autoUIScaler.updateScaleBoundaries(currentBound)
 }
 const resizeScale = () => {
@@ -30,7 +30,7 @@ const resizeScale = () => {
 const initialize = (settingPath, scaleDefault = { max: 1.2, min: 0.7 }) => {
     const minimalWindowSize = { height: 768, width:1024 }
     settingsService = new SettingsService(settingPath)
-    let currentWindow = remote.getCurrentWindow()
+    let currentWindow = electron.remote.getCurrentWindow()
     let settingsZoom = settingsService.getSettingByKey('scale')
     let scale 
     if(!settingsZoom && currentWindow.getBounds().height < minimalWindowSize.height) {

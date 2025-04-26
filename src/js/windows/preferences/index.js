@@ -1,5 +1,4 @@
-const remoteMain = require('@electron/remote/main')
-const { BrowserWindow } = require('electron')
+const { BrowserWindow } = electron = require('electron')
 
 module.exports = () => {
   let win
@@ -20,11 +19,9 @@ module.exports = () => {
       webPreferences: {
         devTools: true,
         nodeIntegration: true,
-        contextIsolation: false
+        enableRemoteModule: true
       }
     })
-    remoteMain.enable(win.webContents)
-
     win.once('closed', () => {
       win = null
     })

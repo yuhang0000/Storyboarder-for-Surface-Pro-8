@@ -83,7 +83,7 @@ class AudioFileControlView {
 
   onRecordMouseEvent (event) {
     if (this.state.mode === 'failed') {
-      this.onNotify({ message: 'Sorry, there doesn’t seem to be a microphone or line input connected. To retry, connect a recording device to your computer and re-open this window.' })
+      this.onNotify({ message: '抱歉, 似乎没有麦克风或线路输入连接. 若要重试, 请将录制设备连接到此设备, 然后重新打开 Storyboarder .' })
     }
 
     // prevent during countdown and finalizing
@@ -298,12 +298,31 @@ class AudioFileControlView {
       // on
       audiofileInputEl.value = boardAudio.filename
 
+      //为啥不在这里直接附上文件名？
+      //console.log('# Audio: ' + boardAudio.filename);
+      //首先获取文本宽度
+      let canvas1 = document.createElement('canvas');
+      let context1 = canvas1.getContext('2d');
+      context1.font = '13px thicccboi sans-serif';
+      let metrics1 = context1.measureText(boardAudio.filename.substring(6));
+      let width1 = metrics1.width;
+      //console.log(width);
+
       // audiofileTextEl.innerHTML = util.truncateMiddle(boardAudio.filename)
-      audiofileTextEl.innerHTML = '<span>' +
-                                    // '<span class="paren">(</span>' +
-                                    `Audio: ${boardAudio.duration}ms` + // : 3s 44.1khz 16bit
-                                    // '<span class="paren">)</span>' +
-                                  '</span>'
+      if(width1 < 100){ //如果宽度大于 100 px 的话, 就走跑马灯吧
+        audiofileTextEl.innerHTML = '<span>' +
+        // '<span class="paren">(</span>' +
+        boardAudio.filename.substring(6) + // 'Audio' + // : 3s 44.1khz 16bit
+        // '<span class="paren">)</span>' +
+        '</span>'
+      }
+      else{
+        audiofileTextEl.innerHTML = '<marquee scrollamount="2" style="padding-top: 4px;padding-bottom: 4px;">' +
+        // '<span class="paren">(</span>' +
+        boardAudio.filename.substring(6) + // 'Audio' + // : 3s 44.1khz 16bit
+        // '<span class="paren">)</span>' +
+        '</marquee>'
+      }
 
       audiofileSvgUseEl.setAttribute('xlink:href',
         audiofileSvgUseEl.getAttribute('xlink:href')
@@ -316,7 +335,7 @@ class AudioFileControlView {
       audiofileInputEl.value = ''
       audiofileTextEl.innerHTML = '<span class="muted">' +
                                     // '<span class="paren">(</span>' +
-                                    'Select Audio File' +
+                                    '选择音频文件' +
                                     // '<span class="paren">)</span>' +
                                   '</span>'
       audiofileSvgUseEl.setAttribute('xlink:href',
@@ -352,7 +371,7 @@ class Recorder {
     )
     if (!devices.find(d => d.deviceId === 'default')) {
       throw new Error(
-        'Could not find default audio device in the list of available devices:\n' +
+        '在可用设备列表中找不到默认音频设备:\n' +
         devices.map(d => `- ${d.label} [${d.deviceId.length && d.deviceId.slice(0, 7)}]`).join('\n'))
     }
 

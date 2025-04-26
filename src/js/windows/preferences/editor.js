@@ -1,15 +1,14 @@
-require('electron-redux/preload')
-const { ipcRenderer, shell } = require('electron')
-const remote = require('@electron/remote')
+const { remote, ipcRenderer, shell } = require('electron')
 const jwt = require('jsonwebtoken')
 const path = require('path')
 const fs = require('fs-extra')
 
 const util = require('./js/utils')
-const prefsModule = require('@electron/remote').require('./prefs')
+const prefsModule = require('electron').remote.require('./prefs')
 
+const { getInitialStateRenderer } = require('electron-redux')
 const configureStore = require('./js/shared/store/configureStore')
-const store = configureStore()
+const store = configureStore(getInitialStateRenderer(), 'renderer')
 
 let prefs,
     inputs,
@@ -147,7 +146,7 @@ const onFilenameClick = event => {
   event.target.style.pointerEvents = 'none'
 
   remote.dialog.showOpenDialog(
-    { title: 'Select Image Editor Application' }
+    { title: '选择外置图像编辑器应用程序' }
   ).then(({ filePaths }) => {
     event.target.style.pointerEvents = 'auto'
 
@@ -166,11 +165,12 @@ const onWatermarkFileClick = event => {
 
   remote.dialog.showOpenDialog(
     {
-      title: 'Import Watermark Image File',
+      title: '导入水印图像文件',
+      buttonlabel: "打开",
       properties: ['openFile'],
       filters: [
         {
-          name: 'Watermark Image (PNG)',
+          name: '水印图像 (PNG)',
           extensions: [
             'png'
           ]
@@ -228,7 +228,7 @@ const render = () => {
     ? util.truncateMiddle(
         path.basename(imgEditorInput.value, path.extname(imgEditorInput.value)) + 
         path.extname(imgEditorInput.value))
-    : '(default)'
+    : '(默认值)'
 
   const storyboardersAccountEl = document.getElementById('storyboardersAccount')
   if (prefs.auth) {
@@ -257,7 +257,7 @@ const render = () => {
     if (watermarkLabelEl) {
       watermarkLabelEl.innerHTML = prefs.userWatermark && fs.existsSync(path.join(remote.app.getPath('userData'), 'watermark.png'))
         ? prefs.userWatermark
-        : '(default)'
+        : '(默认值)'
     }
   }
 

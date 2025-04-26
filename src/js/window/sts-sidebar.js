@@ -179,9 +179,9 @@ const setEnabled = value => {
   if (!value) {
     let el = document.querySelector('#shot-generator-container')
     el.innerHTML = `
-      <div class="inline"><svg class="smallicon"><use xlink:href="./img/symbol-defs.svg#icon-camera"></use></svg>Shot Generator</div>
+      <div class="inline"><svg class="smallicon"><use xlink:href="./img/symbol-defs.svg#icon-camera"></use></svg>辅助镜头</div>
       <div style="line-height: 1.25; padding: 6px 0; color: #777">
-        Shot Generator has been disabled automatically because the graphics card on this machine cannot support its use of WebGL.
+        欧布, 辅助镜头已被禁用, 因为这个设备上的显卡不支持其使用WebGL.
       </div>
     `
   }

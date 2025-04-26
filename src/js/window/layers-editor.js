@@ -17,7 +17,7 @@ class LayersEditor extends EventEmitter {
         this.clearLayer('notes')
         sfx.down(-1, 2)
         sfx.playEffect('trash')
-        notifications.notify({ message: 'Cleared notes layer.', timing: 5 })
+        notifications.notify({ message: '清除注释层.', timing: 5 })
       })
     document
       .querySelector('.layers-ui-reference-clear')
@@ -26,7 +26,7 @@ class LayersEditor extends EventEmitter {
         this.clearLayer('reference')
         sfx.down(-1, 0)
         sfx.playEffect('trash')
-        notifications.notify({ message: 'Cleared reference layer.', timing: 5 })
+        notifications.notify({ message: '清除参考层.', timing: 5 })
       })
     // document.querySelector('.layers-ui-main-visible').addEventListener('pointerdown', this.toggleLayer.bind(this, 1))
     document
@@ -37,7 +37,7 @@ class LayersEditor extends EventEmitter {
         sfx.negative()
         notifications.notify({
           message:
-            'Merged the fill layer down to the reference layer. If this is not what you want, undo now!',
+            '将填充层向下合并到参考层. \n如果你不希望这样, 请立即撤销!',
           timing: 5
         })
       })
@@ -49,7 +49,7 @@ class LayersEditor extends EventEmitter {
         sfx.negative()
         notifications.notify({
           message:
-            'Merged the reference layer up to the fill layer. The reference layer is now baked into the fill layer. If this is not what you want, undo now!',
+            '现在参考层已经合并在填充层里. \n如果你不希望这样, 请立即撤销!',
           timing: 5
         })
       })

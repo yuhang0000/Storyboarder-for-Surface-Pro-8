@@ -2,8 +2,7 @@ const paper = require('paper')
 
 const EventEmitter = require('events').EventEmitter
 
-const { ipcRenderer } = require('electron')
-const remote = require('@electron/remote')
+const { ipcRenderer, remote } = require('electron')
 
 const fs = require('fs')
 const path = require('path')
@@ -20,7 +19,7 @@ const observeStore = require('../shared/helpers/observeStore')
 
 const sfx = require('../wonderunit-sound')
 
-const prefsModule = require('@electron/remote').require('./prefs')
+const prefsModule = require('electron').remote.require('./prefs')
 
 // TODO enableBrushCursor see: https://github.com/wonderunit/storyboarder/issues/1102
 const enableBrushCursor = prefsModule.getPrefs('main')['enableBrushCursor']
@@ -83,7 +82,7 @@ class StoryboarderSketchPane extends EventEmitter {
       console.error(err)
       remote.dialog.showMessageBox({
         type: 'error',
-        message: 'Could not load brushes.\n\nError: ' + err
+        message: '无法加载画笔.\n\n原因是: ' + err
       })
       throw err
     }
@@ -275,8 +274,8 @@ class StoryboarderSketchPane extends EventEmitter {
   preventIfLocked () {
     if (this.strategy instanceof LockedStrategy) {
       remote.dialog.showMessageBox({
-        message: 'The current board is linked to a PSD and cannot be changed. ' +
-                 'To unlink, double-click the board art.'
+        message: '当前画板已与 PSD 文档绑定, 不能编辑.  ' +
+                 '若要取消绑定的话, 请双击画布.'
       })
       return true
     } else {

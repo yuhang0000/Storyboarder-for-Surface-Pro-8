@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./css/fonts.css">
     <link rel="stylesheet" href="./css/welcome.css">
-    <title>New</title>
+    <title>新建</title>
     
     <style>
       #new-window {
@@ -59,62 +59,56 @@
       <div id="close-button">&#10005;</div>
 
       <div class="tab">
-        <h1 style="margin-top: 50px; line-height: 1" id="creation-title">There are 2 ways to create a new storyboard. Which would you like?</h1>
+        <h1 style="margin-top: 50px; line-height: 1" id="creation-title">有两种方法可以创建新的故事板。你想要哪一种？</h1>
 
         <div class="flex-column">
           <div class="column">
-            <h3 id="script-based-title">Based on a script</h3>
+            <h3 id="script-based-title">基于已有剧本创建</h3>
             <span id="script-based-description">
-              If you are working on a story with a script, you can specify the
-              script, and Storyboarder will help you board for each scene and 
-              show you the script while you are boarding. Feel free to change the 
-              script while boarding. Scripts can be in Fountain (.fountain) 
-              or Final Draft (.fdx) format.
+              如果您正在编写带有剧本的故事，你可以指定剧本，Storyboarder 会帮助你为每个场景进行分镜，并在你制作分镜时显示剧本。你可以在分镜过程中自由修改剧本。剧本文档可以是 Fountain（.fountain）或 Final Draft（.fdx）格式。
             </span>
           </div>
           <div style="padding: 20px; width: 20px; align-self: center;"></div>
           <div class="column">
-            <h3 id="blank-title">Blank Storyboard</h3>
+            <h3 id="blank-title">创建空的故事板</h3>
             <span id="blank-description">
-              You can simply create a totally blank storyboard. Just make boards 
-              and draw. If you'd like to import your storyboard into a script 
-              based one later, it's easy.<br/><br/>
-              If you are just starting, why not create a new blank storyboard for fun?
+              你可以简单地创建一个完全空白的故事板。只需要创建分镜并开始绘制即可。如果你想事后再将你的故事板导入到基于剧本的故事中，这也是很容易的。<br/><br/>
+              如果你只是刚刚开始，何不为了乐趣创建一个新的空白故事板呢？
             </span>
           </div>
         </div>
 
         <div class="flex-column" style="margin-top: 40px;">
           <div class="column">
-            <div class="button grey" id="new-script">Select Script...</div>
+            <div class="button grey" id="new-script">选择剧本文件...</div>
           </div>
           <div style="padding: 20px; width: 20px; align-self: center;"></div>
           <div class="column">
-            <div class="button grey" id="new-blank">Create a blank...</div>
+            <div class="button grey" id="new-blank">创建新的故事板...</div>
           </div>
         </div>
       </div>
 
       <div class="tab">
-        <h1 style="margin-top: 50px;" id="aspect-title">What Aspect Ratio?</h1>
+        <h1 style="margin-top: 50px;" id="aspect-title">什么是宽高比?</h1>
 
         <div class="examples">
           <div class="example" data-aspect-ratio="2.39">
-            <div id="aspect-ultrawide">Ultrawide</div>
+            <div id="aspect-ultrawide">超宽幅</div>
             <div>2.39:1</div>
             <div>
               <div class="example-display" style="padding-bottom: calc(100% / 2.39)"></div>
             </div>
           </div>
           <div class="example" data-aspect-ratio="2">
-            <div id="aspect-doublewide">Doublewide</div>
+            <div id="aspect-doublewide">双倍宽幅</div>
             <div>2.00:1</div>
             <div>
               <div class="example-display" style="padding-bottom: calc(100% / 2.00)"></div>
             </div>
           </div>
           <div class="example" data-aspect-ratio="1.85">
-            <div id="aspect-wide">Wide</div>
+            <div id="aspect-wide">宽幅</div>
             <div>1.85:1</div>
             <div>
               <div class="example-display" style="padding-bottom: calc(100% / 1.85)"></div>
@@ -128,21 +122,21 @@
             </div>
           </div>
           <div class="example" data-aspect-ratio="0.5625">
-            <div id="aspect-vertical-hd">Vertical HD</div>
+            <div id="aspect-vertical-hd">垂直 HD</div>
             <div>9:16</div>
             <div>
               <div class="example-display" style="padding-bottom: calc(100% * (16 / 9))"></div>
             </div>
           </div>
           <div class="example" data-aspect-ratio="1">
-            <div id="aspect-square">Square</div>
+            <div id="aspect-square">方形比例</div>
             <div>1:1</div>
             <div>
               <div class="example-display" style="padding-bottom: calc(100% * 1)"></div>
             </div>
           </div>
           <div class="example" data-aspect-ratio="1.3333333333333333">
-            <div id="aspect-old">Old</div>
+            <div id="aspect-old">4比3</div>
             <div>4:3</div>
             <div>
               <div class="example-display" style="padding-bottom: calc(100% * (3 / 4))"></div>
@@ -153,11 +147,11 @@
 
         <div style="margin-top: 1em;">
           <p id="aspect-description">
-            The aspect ratio defines the size of your boards.<br/><br/>
-            2.39:1 is the widest, like what you would watch in a movie.<br/>
-            16:9 is what you would watch on a modern TV.<br/>
-            4:3 is what your grandpops watched back when screens flickered and programming was wholesome.<br/><br/>
-            Please don't select vertical HD. We added it as a joke.<br/>
+            宽高比决定了画布的尺寸比例。<br/><br/>
+            2.39:1 是最宽的比例，它常用于电影镜头里。<br/>
+            16:9 是最常用的比例，大多数笔电和电视会使用这个比例。<br/>
+            4:3 这个比例有点老了，在以前的老式电视机上用的多。<br/><br/>
+            9:16？这个比例看起来好怪，对吧？我们添加这个选项只是为了整活 XD (你大概不会用的上吧？)。<br/>
           </p>
         </div>
       </div>
