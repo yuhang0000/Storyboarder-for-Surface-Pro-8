@@ -1678,7 +1678,7 @@ const loadBoardUI = async () => {
 
       isRecording = true
       let exportsPath = exporterCommon.ensureExportsPathExists(boardFilename)
-      let filename = path.basename(boardFilename, path.extname(boardFilename)) + " timelapse " + moment().format('YYYY-MM-DD hh.mm.ss')
+      let filename = path.basename(boardFilename, path.extname(boardFilename)) + " 延时快照 " + moment().format('YYYY-MM-DD hh.mm.ss')
       canvasRecorder = new CanvasRecorder({
         exportsPath: exportsPath,
         filename: filename,

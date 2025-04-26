@@ -52,6 +52,7 @@ class PomodorTimerView extends EventEmitter {
       case "rest":
         break
       case "running":
+        // debugger;
         let remainingView = this.el.querySelector('#pomodoro-timer-remaining', true)
         remainingView.style.display = "inline-block"
         remainingView.innerHTML = data.remainingFriendly
@@ -68,11 +69,27 @@ class PomodorTimerView extends EventEmitter {
 
   transitionToState(newState) {
     let content
+    let texth //申明一个变量来存放文本高度
     switch(newState) {
       case "rest":
+        let ttt;
+        texth = this.innerEl.querySelector("[id='pomodoro-timer-minutes-input']");
+        if(texth != null){
+          texth = window.getComputedStyle(texth).getPropertyValue("height");
+          ttt = this.innerEl.querySelector("[id='pomodoro-timer-remaining']");
+          ttt = ttt.innerText;
+        }
+        else{
+          texth = "0; display: none;";
+          ttt = this.getStartTimeFriendly();
+        }
+        
         content = `
           <h3 id="pomodoro-timer-title">记录延时快照</h3>
+          <div style="position: relative; wedth: 100%; display: flex; flex-wrap: nowrap; justify-content: center;">
+          <div id="pomodoro-timer-remaining" class="pomodoro-timer-remaining disable" style="height: ${texth}">${ttt}</div>
           <input id="pomodoro-timer-minutes-input" class="pomodoro-timer-minutes-input" type="number" id="minutesInput" value="${this.pomodoroTimerMinutes}" min="1" max="500">
+          </div>
           <div id="pomodoro-timer-minutes-label">分钟</div>
           <div id="pomodoro-timer-start-button" class="pomodoro-timer-button">
             <div class="pomodoro-timer-button-copy">开始</div><svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon"><use xlink:href="./img/button-play-pause.svg#icon-play"></use></svg>
@@ -108,9 +125,16 @@ class PomodorTimerView extends EventEmitter {
         this.updateRecordingsView()
         break
       case "running":
+        //强迫症犯了是吧, 这里统一文字高度, 以及加了点动画
+        texth = this.innerEl.querySelector("[id='pomodoro-timer-minutes-input']");
+        texth = window.getComputedStyle(texth).getPropertyValue("height");
+        
         content = `
           <h3 id="pomodoro-timer-title">记录延时快照</h3>
-          <div id="pomodoro-timer-remaining" class="pomodoro-timer-remaining">${this.getStartTimeFriendly()}</div>
+          <div style="position: relative; wedth: 100%; display: flex; flex-wrap: nowrap; justify-content: center;">
+          <input id="pomodoro-timer-minutes-input" class="pomodoro-timer-minutes-input" type="number" id="minutesInput" value="${this.pomodoroTimerMinutes}" min="1" max="500" disabled="disabled">
+          <div id="pomodoro-timer-remaining" class="pomodoro-timer-remaining" style="height: ${texth}">${this.getStartTimeFriendly()}</div>
+          </div>
           <div id="pomodoro-timer-minutes-label">倒计时</div>
           <div id="pomodoro-timer-cancel-button"  class="pomodoro-timer-button">
             <div class="pomodoro-timer-button-copy">取消</div>
@@ -127,6 +151,7 @@ class PomodorTimerView extends EventEmitter {
           this.cancelTimer()
         })
         this.updateRecordingsView()
+        // debugger;
         break
       case "completed":
         content = `
@@ -216,7 +241,8 @@ class PomodorTimerView extends EventEmitter {
         let recordingImage = recordingImages[i]
         recordingImage.addEventListener('click', (event)=>{
           event.preventDefault()
-          shell.showItemInFolder(event.target.dataset.filepath)
+          // shell.showItemInFolder(event.target.dataset.filepath)
+          shell.openPath(recordingPath); //这里应该是直接打开文件, 而不是文件夹
         })
       }
     }
