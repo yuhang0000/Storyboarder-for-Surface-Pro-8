@@ -73,10 +73,10 @@ let view = {
     let message = ''
     if (representation.connected) {
       if (!representation.canImport) {
-        message = 'Please open a project in Storyboarder before importing.'
+        message = '嗯, 你好像没有打开任何项目, 如果想要导入文件的话, 请先在 Storyboarder 中打开一个项目之后, 再尝试.'
       }
     } else {
-      message = 'Please open the Storyboarder app.'
+      message = '与客户端断开连接! 请检查 Storyboarder 是否保持在后台运行.'
     }
 
     document.querySelector('.message').innerHTML = message
@@ -101,7 +101,7 @@ socket.on('connect', () => actions.setConnected(true))
 socket.on('disconnect', () => actions.setConnected(true))
 
 socket.on('connect_error', function (error) {
-  console.log("connect error - are you sure Storyboarder is running on your computer?")
+  console.log("连接错误 - Storyboarder 可能没有在运行.")
   // console.log(error)
   actions.setConnected(false)
 })

@@ -12,25 +12,25 @@ class ColorPicker extends EventEmitter {
     this.target = null
 
     this.primaryColors = [
-      ['Red', '#F44336'],
-      ['Pink', '#E91E63'],
-      ['Purple', '#9C27B0'],
-      ['Deep Purple', '#673AB7'],
-      ['Indigo', '#3F51B5'],
-      ['Blue', '#2196F3'],
-      ['Cornflower Blue', '#03A9F4'],
-      ['Cyan', '#00BCD4'],
-      ['Teal', '#009688'],
-      ['Deep Green', '#4CAF50'],
-      ['Green', '#8BC34A'],
-      ['Lime', '#CDDC39'],
-      ['Yellow', '#FFEB3B'],
-      ['Amber', '#FFC107'],
-      ['Orange', '#FF9800'],
-      ['Deep Orange', '#FF5722'],
-      ['Brown', '#795548'],
-      ['Blue Grey', '#607D8B'],
-      ['Grey', '#9E9E9E'],
+      ['红色', '#F44336'],
+      ['粉色', '#E91E63'],
+      ['紫色', '#9C27B0'],
+      ['暗紫色', '#673AB7'],
+      ['靛蓝色', '#3F51B5'],
+      ['蓝色', '#2196F3'],
+      ['矢车菊蓝', '#03A9F4'],
+      ['青色', '#00BCD4'],
+      ['深青色', '#009688'],
+      ['深绿色', '#4CAF50'],
+      ['绿色', '#8BC34A'],
+      ['荧光绿', '#CDDC39'],
+      ['黄色', '#FFEB3B'],
+      ['琥珀色', '#FFC107'],
+      ['橙色', '#FF9800'],
+      ['深橙色', '#FF5722'],
+      ['棕色', '#795548'],
+      ['蓝灰色', '#607D8B'],
+      ['灰色', '#9E9E9E'],
     ]
 
     this.el = null
@@ -49,15 +49,15 @@ class ColorPicker extends EventEmitter {
     colorRow = []
     for (var i = 0; i < this.primaryColors.length; i++) {
       if (this.primaryColors.length-1 == i) {
-        colorRow.push(['White',Color("#fff").toCSS()])
+        colorRow.push(['白色',Color("#fff").toCSS()])
       } else {
-        colorRow.push(['Faint ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).blend(Color("#fff"),.50).toCSS()])
+        colorRow.push(['很淡的 ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).blend(Color("#fff"),.50).toCSS()])
       }
     }
     colorRows.push(colorRow)
     colorRow = []
     for (var i = 0; i < this.primaryColors.length; i++) {
-      colorRow.push(['Light ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).blend(Color("#fff"),.20).toCSS()])
+      colorRow.push(['淡淡的 ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).blend(Color("#fff"),.20).toCSS()])
     }
     colorRows.push(colorRow)
     colorRow = []
@@ -67,24 +67,24 @@ class ColorPicker extends EventEmitter {
     colorRows.push(colorRow)
     colorRow = []
     for (var i = 0; i < this.primaryColors.length; i++) {
-      colorRow.push(['Shaded ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).shiftHue(-5).blend(Color("#000"),.20).toCSS()])
+      colorRow.push(['有点暗的 ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).shiftHue(-5).blend(Color("#000"),.20).toCSS()])
     }
     colorRows.push(colorRow)
     colorRow = []
     for (var i = 0; i < this.primaryColors.length; i++) {
-      colorRow.push(['Dark ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).shiftHue(-10).blend(Color("#000"),.40).toCSS()])
+      colorRow.push(['暗暗的 ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).shiftHue(-10).blend(Color("#000"),.40).toCSS()])
     }
     colorRows.push(colorRow)
     colorRow = []
     for (var i = 0; i < this.primaryColors.length; i++) {
-      colorRow.push(['Shadow ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).shiftHue(-20).blend(Color("#000"),.65).toCSS()])
+      colorRow.push(['很暗的 ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).shiftHue(-20).blend(Color("#000"),.65).toCSS()])
     }
     colorRows.push(colorRow)
     colorRow = []
     for (var i = 0; i < this.primaryColors.length - 3; i++) {
-      colorRow.push(['Pitch ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).shiftHue(-20).blend(Color("#000"),.80).toCSS()])
+      colorRow.push(['炒鸡暗的 ' + this.primaryColors[i][0],Color(this.primaryColors[i][1]).shiftHue(-20).blend(Color("#000"),.80).toCSS()])
     }
-    colorRow.push(['Pitch Ass Black',Color("#000").toCSS()])
+    colorRow.push(['五彩斑斓的黑色',Color("#000").toCSS()])
     colorRows.push(colorRow)
     return colorRows
   }

@@ -1,4 +1,4 @@
-const remote = require('@electron/remote')
+const { remote } = require('electron')
 const EventEmitter = require('events').EventEmitter
 const Color = require('color-js')
 
@@ -381,29 +381,35 @@ class Toolbar extends EventEmitter {
   }
 
   startPomodoroTimer (data) {
-    let elRest = document.querySelector('#toolbar-pomodoro-rest')
-    elRest.style.display = 'none'
-    let elRunning = document.querySelector('#toolbar-pomodoro-running')
-    elRunning.style.display = 'flex'
+    // let elRest = document.querySelector('#toolbar-pomodoro-rest')
+    // elRest.style.display = 'none'
+    // let elRunning = document.querySelector('#toolbar-pomodoro-running')
+    // elRunning.style.display = 'flex'
     let elRunningStatus = document.querySelector('#toolbar-pomodoro-running-status')
     elRunningStatus.innerHTML = data.remainingFriendly
+    // elRunningStatus.style.display = "block";
+    elRunningStatus.classList.add('enable');
   }
 
   updatePomodoroTimer (data = { remaining: 0 }) {
-    let elRest = document.querySelector('#toolbar-pomodoro-rest')
-    let elRunning = document.querySelector('#toolbar-pomodoro-running')
+    // let elRest = document.querySelector('#toolbar-pomodoro-rest')
+    // let elRunning = document.querySelector('#toolbar-pomodoro-running')
     let elRunningStatus = document.querySelector('#toolbar-pomodoro-running-status')
     switch (data.state) {
       case 'running':
         elRunningStatus.innerHTML = data.remainingFriendly
         break
       case 'completed':
-        elRest.style.display = 'flex'
-        elRunning.style.display = 'none'
+        // elRest.style.display = 'flex'
+        // elRunning.style.display = 'none'
+        // elRunningStatus.style.display = "none";
+        elRunningStatus.classList.remove('enable');
         break
       case 'rest':
-        elRest.style.display = 'flex'
-        elRunning.style.display = 'none'
+        // elRest.style.display = 'flex'
+        // elRunning.style.display = 'none'
+        // elRunningStatus.style.display = "none";
+        elRunningStatus.classList.remove('enable');
     }
   }
 }

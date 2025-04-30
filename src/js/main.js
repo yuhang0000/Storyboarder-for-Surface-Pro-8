@@ -1,5 +1,3 @@
-const remoteMain = require('@electron/remote/main')
-remoteMain.initialize()
 const {app, ipcMain, BrowserWindow, dialog, powerSaveBlocker} = electron = require('electron')
 
 const fs = require('fs-extra')
@@ -10,13 +8,14 @@ const chokidar = require('chokidar')
 const os = require('os')
 const log = require('./shared/storyboarder-electron-log')
 const fileSystem = require('fs')
-const EventEmitter = require('events')
 
 const prefModule = require('./prefs')
 prefModule.init(path.join(app.getPath('userData'), 'pref.json'))
 
 
 const configureStore = require('./shared/store/configureStore')
+const observeStore = require('./shared/helpers/observeStore')
+const actions = require('./shared/actions')
 const defaultKeyMap = require('./shared/helpers/defaultKeyMap')
 
 const analytics = require('./analytics')
@@ -33,8 +32,6 @@ const MobileServer = require('./express-app/app')
 const preferencesUI = require('./windows/preferences')()
 const registration = require('./windows/registration/main')
 const shotGeneratorWindow = require('./windows/shot-generator/main')
-const printProject = require('./windows/print-project/main')
-const printWorksheet = require('./windows/print-worksheet/main')
 
 const JWT = require('jsonwebtoken')
 
@@ -45,31 +42,8 @@ const autoUpdater = require('./auto-updater')
 const LanguagePreferencesWindow = require('./windows/language-preferences/main')
 //https://github.com/luiseduardobrito/sample-chat-electron
 
-//
-//
-// Menu
-// 
-const createMenu = require('./main/menu')
-const menuBus = new EventEmitter()
 
-/*
-TODO
-used by license registration, which is disabled currently
-see: windows/registration
-auth.json can be saved/loaded, e.g.:
-
-    const observeStore = require('./shared/helpers/observeStore')
-    const throttle = require('lodash.throttle')
-    const authStorage = require('./shared/store/authStorage')
-    const persistedState = authStorage.loadState()
-    const store = configureStore({ ...persistedState })
-    observeStore(
-      store,
-      state => state.auth,
-      throttle(() => authStorage.saveState({ auth: store.getState().auth }), 5000)
-    )
-*/
-const store = configureStore()
+const store = configureStore({}, 'main')
 
 
 if (isDev) {
@@ -87,6 +61,7 @@ let welcomeWindow
 let newWindow
 
 let mainWindow
+let printWindow
 let sketchWindow
 let keyCommandWindow
 
@@ -177,11 +152,9 @@ app.on('ready', async () => {
 
 
 
+
   languageSettings.setSettings(settings)
   //TODO(): Check if files of custom languages exist
-
-
-
   // load key map
   const keymapPath = path.join(app.getPath('userData'), 'keymap.json')
   let payload = {}
@@ -222,7 +195,7 @@ app.on('ready', async () => {
       log.error(err)
       dialog.showMessageBox({
         type: 'error',
-        message: `Whoops! An error ocurred while trying to read ${keymapPath}.\nUsing default keymap instead.\n\n${err}`
+        message: `Whoops! 尝试读取 ${keymapPath} 配置文件时出现错误.\n现在使用的是默认的快捷键配置文件.\n\n${err}`
       })
     }
   } else {
@@ -259,9 +232,9 @@ app.on('ready', async () => {
     if (!isDev && !app.isInApplicationsFolder()) {
       const { response } = await dialog.showMessageBox({
         type: 'question',
-        title: 'Move to Applications folder?',
-        message: 'Would you like to move Storyboarder to the Applications folder?',
-        buttons: ['Move to Applications', 'Do Not Move'],
+        title: '移动到程序安装文件夹?',
+        message: '要将故事板移到程序安装文件夹中吗?',
+        buttons: ['是', '否'],
         defaultId: 1
       })
 
@@ -273,7 +246,7 @@ app.on('ready', async () => {
           if (!didMove) {
             dialog.showMessageBox(null, {
               type: 'error',
-              message: 'Could not move to Applications folder'
+              message: '无法移动到程序安装文件夹里.'
             })
           }
         } catch (err) {
@@ -313,16 +286,6 @@ app.on('ready', async () => {
 
   await attemptLicenseVerification()
 
-
-
-  // setup the menu
-  createMenu({
-    store,
-    send: (event, ...rest) => menuBus.emit(event, event, ...rest)
-  })
-
-
-
   // open the welcome window when the app loads up first
   openWelcomeWindow()
 
@@ -347,7 +310,7 @@ app.on('ready', async () => {
       } else {
         log.error('Could not load', filePath)
         dialog.showErrorBox(
-          'Could not load requested file',
+          '无法加载请求的文件',
           `Error loading ${filePath}`
         )
       }
@@ -381,10 +344,9 @@ let openKeyCommandWindow = () => {
     titleBarStyle: 'hiddenInset',
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(keyCommandWindow.webContents)
   keyCommandWindow.loadURL(`file://${__dirname}/../keycommand-window.html`)
   keyCommandWindow.once('ready-to-show', () => {
     setTimeout(() => keyCommandWindow.show(), 250) // wait for DOM
@@ -418,10 +380,9 @@ let openNewWindow = () => {
       modal: true,
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        enableRemoteModule: true
       }
     })
-    remoteMain.enable(newWindow.webContents)
     newWindow.loadURL(`file://${__dirname}/../new.html`)
     newWindow.once('ready-to-show', () => {
       newWindow.show()
@@ -446,10 +407,9 @@ let openWelcomeWindow = () => {
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(welcomeWindow.webContents)
   welcomeWindow.loadURL(`file://${__dirname}/../welcome.html`)
 
   newWindow = new BrowserWindow({
@@ -462,10 +422,9 @@ let openWelcomeWindow = () => {
     modal: true,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(newWindow.webContents)
   newWindow.loadURL(`file://${__dirname}/../new.html`)
 
   let recentDocumentsCopy
@@ -524,7 +483,7 @@ let openFile = filepath => {
       if (err) {
         dialog.showMessageBox({
           type: 'error',
-          message: 'Could not open Final Draft file.\n' + error.message,
+          message: '无法打开 Final Draft 剧本文件.\n' + error.message,
         })
         return
       }
@@ -533,7 +492,7 @@ let openFile = filepath => {
         if (err) {
           dialog.showMessageBox({
             type: 'error',
-            message: 'Could not parse Final Draft XML.\n' + error.message,
+            message: '无法解析 Final Draft XML.\n' + error.message,
           })
           return
         }
@@ -554,7 +513,7 @@ let openFile = filepath => {
           log.error(error)
           dialog.showMessageBox({
             type: 'error',
-            message: 'Could not parse Final Draft data.\n' + error.message
+            message: '无法解析 Final Draft 数据.\n' + error.message
           })
         }
       })
@@ -568,7 +527,7 @@ let openFile = filepath => {
       if (err) {
         dialog.showMessageBox({
           type: 'error',
-          message: 'Could not read Fountain script.\n' + err.message,
+          message: '无法读取 Fountain 剧本文件.\n' + err.message,
         })
         return
       }
@@ -581,7 +540,7 @@ let openFile = filepath => {
         log.error(error)
         dialog.showMessageBox({
           type: 'error',
-          message: 'Could not parse Fountain script.\n' + error.message,
+          message: '无法解析 Fountain 剧本文件.\n' + error.message,
         })
       }
     })
@@ -623,10 +582,11 @@ const findOrCreateProjectFolder = (scriptDataObject) => {
 
 let openDialogue = () => {
   dialog.showOpenDialog({
-    title: "Open Script or Storyboarder",
+    title: "打开剧本&故事板",
+    buttonlabel: "打开", //这里补上按钮标签
     filters:[
       {
-        name: 'Screenplay or Storyboarder',
+        name: '剧本或故事板',
         extensions: [
           'storyboarder',
           'fountain',
@@ -645,7 +605,8 @@ let openDialogue = () => {
 let importImagesDialogue = (shouldReplace = false) => {
   dialog.showOpenDialog(
     {
-      title:"Import Boards",
+      title:"导入图像",
+      buttonlabel: "打开", //这里补上按钮标签
       filters:[
         {name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'psd']},
       ],
@@ -703,11 +664,31 @@ let importImagesDialogue = (shouldReplace = false) => {
   })
 }
 
+let importWorksheetDialogue = () => {
+  dialog.showOpenDialog(
+    {
+      title:"导入工作表",
+      buttonlabel: "打开", //这里补上按钮标签
+      filters:[
+        {name: 'Images', extensions: ['png', 'jpg', 'jpeg']},
+      ],
+      properties: [
+        "openFile",
+      ]
+    }
+  ).then(({ filePaths }) => {
+    if (filePaths.length) {
+      mainWindow.webContents.send('importWorksheets', filePaths)
+    }
+  })
+  .catch(err => log.error(err))
+}
+
 const processFdxData = fdxObj => {
   try {
     ensureFdxSceneIds(fdxObj)
   } catch (err) {
-    throw new Error('Could not add scene ids to Final Draft data.\n' + error.message)
+    throw new Error('不能将场景id添加到最终文档里.\n' + error.message)
     return
   }
 
@@ -780,7 +761,7 @@ let processFountainData = (data, create, update) => {
         ? coll + 1
         : coll
   , 0)
-  if (scenesWithSceneNumbers === 0) throw new Error('Could not find any numbered scenes in this Fountain script.')
+  if (scenesWithSceneNumbers === 0) throw new Error('在此 Fountain 剧本文件中未找到任何编号的场景.')
 
   switch (scriptData[scriptData.length-1].type) {
     case 'section':
@@ -823,7 +804,7 @@ const onScriptFileChange = (eventType, filepath, stats) => {
       } catch (error) {
         dialog.showMessageBox({
           type: 'error',
-          message: 'Could not reload script.\n' + error.message
+          message: '无法加载此文件.\n' + error.message
         })
       }
 
@@ -833,7 +814,7 @@ const onScriptFileChange = (eventType, filepath, stats) => {
         if (err) {
           dialog.showMessageBox({
             type: 'error',
-            message: 'Could not parse Final Draft XML.\n' + error.message,
+            message: '无法解析 Final Draft XML.\n' + error.message,
           })
           return
         }
@@ -845,7 +826,7 @@ const onScriptFileChange = (eventType, filepath, stats) => {
         } catch (error) {
           dialog.showMessageBox({
             type: 'error',
-            message: 'Could not reload script.\n' + error.message
+            message: '无法加载此文件.\n' + error.message
           })
         }
       })
@@ -878,11 +859,11 @@ const ensureFdxSceneIds = fdxObj => {
 
     dialog.showMessageBox({
       type: 'info',
-      message: 'We added scene IDs to the Final Draft script',
-      detail: "Scene IDs are what we use to make sure we put the storyboards in the right place. " +
-              "If you have your script open in an editor, you should reload it. " +
-              "Also, you can change your script around as much as you want, "+
-              "but please don't change the scene IDs.",
+      message: '我们在 Final Draft 的剧本文档里中添加了场景id.',
+      detail: "场景id是我们用来确保我们把故事板放在正确的位置的标记. " +
+              "如果您在编辑器中打开脚本, 则应该重新加载它. " +
+              "此外, 你可以随心所欲地修改你的脚本, "+
+              "但请不要更改场景id.",
       buttons: ['OK']
     })
   }
@@ -894,8 +875,8 @@ const ensureFountainSceneIds = (filePath, data) => {
   if (sceneIdScript[1]) {
     dialog.showMessageBox({
       type: 'info',
-      message: 'We added scene IDs to your fountain script.',
-      detail: "Scene IDs are what we use to make sure we put the storyboards in the right place. If you have your script open in an editor, you should reload it. Also, you can change your script around as much as you want, but please don't change the scene IDs.",
+      message: '我们在 fountain 剧本文件中添加了场景id.',
+      detail: "场景id是我们用来确保我们把故事板放在正确的位置的标记. 如果您在编辑器中打开脚本, 则应该重新加载它. 此外, 你可以随心所欲地修改你的脚本, 但请不要更改场景id.",
       buttons: ['OK']
     })
 
@@ -930,8 +911,8 @@ const ensureFountainSceneIds = (filePath, data) => {
 const createAndLoadScene = async aspectRatio => {
   // if directory exists, showSaveDialog will prompt to confirm overwrite
   let { canceled, filePath } = await dialog.showSaveDialog({
-    title: "New Storyboard",
-    buttonLabel: "Create",
+    title: "创建新的故事板",
+    buttonLabel: "创建",
     defaultPath: app.getPath('documents'),
     options: {
       properties: [
@@ -953,7 +934,7 @@ const createAndLoadScene = async aspectRatio => {
       await trash(filePath)
     } else {
       dialog.showMessageBox(null, {
-        message: "Could not overwrite file " + path.basename(filePath) + ". Only folders can be overwritten."
+        message: "无法覆盖文件 " + path.basename(filePath) + ". 只有文件夹可以被覆盖。"
       })
       return
     }
@@ -1031,10 +1012,9 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
       devTools: true,
       plugins: true,
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(mainWindow.webContents)
 
   let projectName = path.basename(filename, path.extname(filename))
   loadingStatusWindow = new BrowserWindow({
@@ -1046,10 +1026,9 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
     resizable: isDev ? true : false,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  remoteMain.enable(loadingStatusWindow.webContents)
   loadingStatusWindow.loadURL(`file://${__dirname}/../loading-status.html?name=${encodeURIComponent(projectName)}`)
   loadingStatusWindow.once('ready-to-show', () => {
     loadingStatusWindow.show()
@@ -1062,14 +1041,16 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
     if (isDev) {
       if (mainWindow) {
         mainWindow.show()
+        //尝试直接最大化
+        mainWindow.maximize();
         mainWindow.webContents.openDevTools()
       }
     }
     dialog.showMessageBox({
-      title: 'Error',
+      title: 'Oops! ',
       type: 'error',
       message: message,
-      detail: 'In file: ' + source + '#' + lineno + ':' + colno
+      detail: '这个文件出现了错误, 导致 Storyboarder 无法继续运行: ' + source + '\n#' + lineno + ':' + colno
     })
     log.error(message, source, lineno, colno)
     analytics.exception(message, source, lineno)
@@ -1077,6 +1058,10 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
 
   ipcMain.on('errorInWindow', onErrorInWindow)
   mainWindow.loadURL(`file://${__dirname}/../main-window.html`)
+  
+  //一上来就打开DevTool
+  mainWindow.webContents.openDevTools();
+  
   mainWindow.once('ready-to-show', () => {
     mainWindow.webContents.send('load', [filename, scriptData, locations, characters, boardSettings, currentPath])
     isLoadingProject = false
@@ -1096,9 +1081,9 @@ let loadStoryboarderWindow = (filename, scriptData, locations, characters, board
   mainWindow.webContents.on('will-prevent-unload', event => {
     const choice = dialog.showMessageBoxSync({
       type: 'question',
-      buttons: ['Yes', 'No'],
-      title: 'Confirm',
-      message: 'Your Storyboarder file is not saved. Are you sure you want to close the workspace?'
+      buttons: ['是', '否'],
+      title: '提示',
+      message: '你的故事板尚未保存, 您确定要关闭工作区吗?'
     })
 
     const leave = (choice === 0)
@@ -1205,7 +1190,7 @@ let attemptLicenseVerification = async () => {
 
     } else {
       dialog.showMessageBox({
-        message: 'License key is no longer valid.'
+        message: '许可证密钥不再有效.'
       })
       log.info('Removing invalid license key at', licenseKeyPath)
       prefModule.revokeLicense()
@@ -1215,7 +1200,7 @@ let attemptLicenseVerification = async () => {
     log.error(err)
     dialog.showMessageBox({
       type: 'error',
-      message: `An error occurred while checking the license key.\n\n${err}`
+      message: `检查许可密钥时发生错误.\n\n${err}`
     })
   }
 }
@@ -1228,103 +1213,103 @@ let attemptLicenseVerification = async () => {
 // Main Window
 //////////////////
 
-menuBus.on('newBoard', (e, arg)=> {
+ipcMain.on('newBoard', (e, arg)=> {
   mainWindow.webContents.send('newBoard', arg)
 })
 
-menuBus.on('deleteBoards', (e, arg)=> {
+ipcMain.on('deleteBoards', (e, arg)=> {
   mainWindow.webContents.send('deleteBoards', arg)
 })
 
-menuBus.on('duplicateBoard', (e, arg)=> {
+ipcMain.on('duplicateBoard', (e, arg)=> {
   mainWindow.webContents.send('duplicateBoard')
 })
 
-menuBus.on('reorderBoardsLeft', (e, arg)=> {
+ipcMain.on('reorderBoardsLeft', (e, arg)=> {
   mainWindow.webContents.send('reorderBoardsLeft')
 })
 
-menuBus.on('reorderBoardsRight', (e, arg)=> {
+ipcMain.on('reorderBoardsRight', (e, arg)=> {
   mainWindow.webContents.send('reorderBoardsRight')
 })
 
-menuBus.on('togglePlayback', (e, arg)=> {
+ipcMain.on('togglePlayback', (e, arg)=> {
   mainWindow.webContents.send('togglePlayback')
 })
 
-menuBus.on('openInEditor', (e, arg)=> {
+ipcMain.on('openInEditor', (e, arg)=> {
   mainWindow.webContents.send('openInEditor')
 })
 
-menuBus.on('goPreviousBoard', (e, arg)=> {
+ipcMain.on('goPreviousBoard', (e, arg)=> {
   mainWindow.webContents.send('goPreviousBoard')
 })
 
-menuBus.on('goNextBoard', (e, arg)=> {
+ipcMain.on('goNextBoard', (e, arg)=> {
   mainWindow.webContents.send('goNextBoard')
 })
 
-menuBus.on('previousScene', (e, arg)=> {
+ipcMain.on('previousScene', (e, arg)=> {
   mainWindow.webContents.send('previousScene')
 })
 
-menuBus.on('nextScene', (e, arg)=> {
+ipcMain.on('nextScene', (e, arg)=> {
   mainWindow.webContents.send('nextScene')
 })
 
-menuBus.on('copy', (e, arg)=> {
+ipcMain.on('copy', (e, arg)=> {
   mainWindow.webContents.send('copy')
 })
 
-menuBus.on('paste', (e, arg)=> {
+ipcMain.on('paste', (e, arg)=> {
   mainWindow.webContents.send('paste')
 })
 
-menuBus.on('paste-replace', () => {
+ipcMain.on('paste-replace', () => {
   mainWindow.webContents.send('paste-replace')
 })
 
 /// TOOLS
 
-menuBus.on('undo', (e, arg)=> {
+ipcMain.on('undo', (e, arg)=> {
   mainWindow.webContents.send('undo')
 })
 
 
-menuBus.on('redo', (e, arg)=> {
+ipcMain.on('redo', (e, arg)=> {
   mainWindow.webContents.send('redo')
 })
 
-menuBus.on('setTool', (e, arg) =>
+ipcMain.on('setTool', (e, arg) =>
   mainWindow.webContents.send('setTool', arg))
 
-menuBus.on('useColor', (e, arg)=> {
+ipcMain.on('useColor', (e, arg)=> {
   mainWindow.webContents.send('useColor', arg)
 })
 
-menuBus.on('clear', (e, arg) => {
+ipcMain.on('clear', (e, arg) => {
   mainWindow.webContents.send('clear', arg)
 })
 
-menuBus.on('brushSize', (e, arg)=> {
+ipcMain.on('brushSize', (e, arg)=> {
   mainWindow.webContents.send('brushSize', arg)
 })
 
-menuBus.on('flipBoard', (e, arg)=> {
+ipcMain.on('flipBoard', (e, arg)=> {
   mainWindow.webContents.send('flipBoard', arg)
 })
 
 /// VIEW
 
-menuBus.on('cycleViewMode', (e, arg)=> {
+ipcMain.on('cycleViewMode', (e, arg)=> {
   mainWindow.webContents.send('cycleViewMode', arg)
 })
 
-menuBus.on('toggleCaptions', (e, arg)=> {
+ipcMain.on('toggleCaptions', (e, arg)=> {
   mainWindow.webContents.send('toggleCaptions', arg)
 })
 
-menuBus.on('toggleTimeline', () =>
+ipcMain.on('toggleTimeline', () =>
   mainWindow.webContents.send('toggleTimeline'))
 
 //////////////////
@@ -1336,23 +1321,14 @@ ipcMain.on('openFile', (e, arg)=> {
   openFile(arg)
 })
 
+ipcMain.on('openDialogue', (e, arg) => {
+  openDialogue()
+})
 
-
-// openDialogue (ipc and menu)
-ipcMain.on('openDialogue', () => openDialogue())
-menuBus.on('openDialogue', () => openDialogue())
-
-// importImagesDialogue (ipc and menu)
 ipcMain.on('importImagesDialogue', (e, arg) => {
   importImagesDialogue(arg)
   mainWindow.webContents.send('importNotification', arg)
 })
-menuBus.on('importImagesDialogue', (e, arg) => {
-  importImagesDialogue(arg)
-  mainWindow.webContents.send('importNotification', arg)
-})
-
-
 
 ipcMain.on('createNew', (e, aspectRatio) => {
   newWindow.hide()
@@ -1399,14 +1375,14 @@ ipcMain.on('goNextScene', (event, arg)=> {
   mainWindow.webContents.send('goNextScene')
 })
 
-menuBus.on('toggleSpeaking', (event, arg)=> {
+ipcMain.on('toggleSpeaking', (event, arg)=> {
   mainWindow.webContents.send('toggleSpeaking')
 })
 
-menuBus.on('stopAllSounds', event =>
+ipcMain.on('stopAllSounds', event =>
   mainWindow.webContents.send('stopAllSounds'))
 
-menuBus.on('addAudioFile', event =>
+ipcMain.on('addAudioFile', event =>
   mainWindow.webContents.send('addAudioFile'))
 
 ipcMain.on('playsfx', (event, arg)=> {
@@ -1423,58 +1399,73 @@ ipcMain.on('textInputMode', (event, arg)=> {
   mainWindow.webContents.send('textInputMode', arg)
 })
 
-menuBus.on('preferences', (event, arg) => {
+ipcMain.on('preferences', (event, arg) => {
   preferencesUI.show()
   analytics.screenView('preferences')
 })
 
-menuBus.on('toggleGuide', (event, arg) => {
+ipcMain.on('toggleGuide', (event, arg) => {
   mainWindow.webContents.send('toggleGuide', arg)
 })
 
-menuBus.on('toggleOnionSkin', event =>
+ipcMain.on('toggleOnionSkin', event =>
   mainWindow.webContents.send('toggleOnionSkin'))
 
-menuBus.on('toggleNewShot', (event, arg) => {
+ipcMain.on('toggleNewShot', (event, arg) => {
   mainWindow.webContents.send('toggleNewShot', arg)
 })
 
-menuBus.on('showTip', (event, arg) => {
+ipcMain.on('showTip', (event, arg) => {
   mainWindow.webContents.send('showTip', arg)
 })
 
-menuBus.on('exportAnimatedGif', (event, arg) => {
+ipcMain.on('exportAnimatedGif', (event, arg) => {
   mainWindow.webContents.send('exportAnimatedGif', arg)
 })
 
-menuBus.on('exportVideo', (event, arg) => {
+ipcMain.on('exportVideo', (event, arg) => {
   mainWindow.webContents.send('exportVideo', arg)
 })
 
-menuBus.on('exportFcp', (event, arg) => {
+ipcMain.on('exportFcp', (event, arg) => {
   mainWindow.webContents.send('exportFcp', arg)
 })
 
-menuBus.on('exportImages', (event, arg) => {
+ipcMain.on('exportImages', (event, arg) => {
   mainWindow.webContents.send('exportImages', arg)
 })
 
-menuBus.on('exportWeb', (event, arg) => {
+ipcMain.on('exportPDF', (event, arg) => {
+  mainWindow.webContents.send('exportPDF', arg)
+})
+
+ipcMain.on('exportWeb', (event, arg) => {
   mainWindow.webContents.send('exportWeb', arg)
 })
-menuBus.on('exportZIP', (event, arg) => {
+ipcMain.on('exportZIP', (event, arg) => {
   mainWindow.webContents.send('exportZIP', arg)
 })
 
-menuBus.on('exportCleanup', (event, arg) => {
+ipcMain.on('exportCleanup', (event, arg) => {
   mainWindow.webContents.send('exportCleanup', arg)
 })
 
-menuBus.on('save', (event, arg) => {
+ipcMain.on('printWorksheet', (event, arg) => {
+  //openPrintWindow()
+  mainWindow.webContents.send('printWorksheet', arg)
+})
+
+ipcMain.on('importWorksheets', (event, arg) => {
+  //openPrintWindow()
+  importWorksheetDialogue()
+  mainWindow.webContents.send('importNotification', arg)
+})
+
+ipcMain.on('save', (event, arg) => {
   mainWindow.webContents.send('save', arg)
 })
 
-menuBus.on('saveAs', (event, arg) => {
+ipcMain.on('saveAs', (event, arg) => {
   mainWindow.webContents.send('saveAs', arg)
 })
 
@@ -1482,7 +1473,7 @@ ipcMain.on('prefs:change', (event, arg) => {
   !mainWindow.isDestroyed() && mainWindow.webContents.send('prefs:change', arg)
 })
 
-menuBus.on('showKeyCommands', (event, arg) => {
+ipcMain.on('showKeyCommands', (event, arg) => {
   openKeyCommandWindow()
   analytics.screenView('key commands')
 })
@@ -1511,9 +1502,15 @@ ipcMain.on('workspaceReady', event => {
   if (!mainWindow) return
   
   if (os.platform() == 'win32') {
-    setTimeout(()=> {mainWindow.show()}, 1000)
+    setTimeout(()=> {
+      mainWindow.show()
+      //尝试直接最大化
+      mainWindow.maximize();
+      }, 1000)
   } else {
     mainWindow.show()
+    //尝试直接最大化
+    mainWindow.maximize();
   }
 
   // only after the workspace is ready will it start getting future focus events
@@ -1567,81 +1564,16 @@ ipcMain.on('openLanguagePreferences', (event) => {
   } else {
     LanguagePreferencesWindow.createWindow(() => {LanguagePreferencesWindow.reveal()})
   }
+  //openPrintWindow(PDFEXPORTPW, showPDFPrintWindow);
+  //ipcRenderer.send('analyticsEvent', 'Board', 'exportPDF')
 })
 
 
-
-// PDF Export
-menuBus.on('exportPDF', () => {
-  if (!mainWindow) return
-
-  printProject.show({ parent: mainWindow })
-  analytics.event('Board', 'show print window')
-})
-ipcMain.handle('exportPDF:getData', async () => {
-  if (!mainWindow) return
-
-  return await new Promise(resolve => {
-    ipcMain.once('exportPDF:getProjectData-response', (event, projectData) => {
-      resolve({
-        currentFilePath: currentFile,
-        projectData
-      })
-    })
-    mainWindow.webContents.send('exportPDF:getProjectData-request')
-  })
+ipcMain.on('exportPrintablePdf', (event, sourcePath, fileName) => {
+  mainWindow.webContents.send('exportPrintablePdf', sourcePath, fileName)
 })
 
-// Worksheet Export
-menuBus.on('printWorksheet', () => {
-  if (!mainWindow) return
-
-  printWorksheet.show({ parent: mainWindow })
-
-  analytics.event('Board', 'show print worksheet window')
-})
-ipcMain.handle('printWorksheet:getData', async () => {
-  if (!mainWindow) return
-
-  return await new Promise(resolve => {
-    ipcMain.once('printWorksheet:getProjectData-response', (event, projectData) => {
-      resolve({
-        currentFilePath: currentFile,
-        projectData
-      })
-    })
-    mainWindow.webContents.send('printWorksheet:getProjectData-request')
-  })
-})
-
-// Worksheet Import
-menuBus.on('importWorksheets', async (event, arg) => {
-  try {
-    let { filePaths } = await dialog.showOpenDialog({
-      title: 'Import Worksheet',
-      filters:[
-        { name: 'Images', extensions: ['png', 'jpg', 'jpeg'] },
-      ],
-      properties: [
-        'openFile',
-      ]
-    })
-
-    if (filePaths.length) {
-      mainWindow.webContents.send('importWorksheets', filePaths)
-      mainWindow.webContents.send('importNotification', arg)
-    }
-
-  } catch (err) {
-    log.error(err)
-  }
-})
-
-ipcMain.on('exportPrintableWorksheetPdf', (event, sourcePath) =>
-  mainWindow.webContents.send('exportPrintableWorksheetPdf', sourcePath)
-)
-
-menuBus.on('toggleAudition', (event) => {
+ipcMain.on('toggleAudition', (event) => {
   mainWindow.webContents.send('toggleAudition')
 })
 
@@ -1650,17 +1582,17 @@ ipcMain.on('signInSuccess', (event, response) => {
   mainWindow.webContents.send('signInSuccess', response)
 })
 
-menuBus.on('revealShotGenerator',
+ipcMain.on('revealShotGenerator',
   event => mainWindow.webContents.send('revealShotGenerator'))
 
-menuBus.on('zoomReset',
+ipcMain.on('zoomReset',
   event => mainWindow.webContents.send('zoomReset'))
-menuBus.on('scale-ui-by',
+ipcMain.on('scale-ui-by',
   (event, value) => mainWindow.webContents.send('scale-ui-by', value))
-menuBus.on('scale-ui-reset',
+ipcMain.on('scale-ui-reset',
   (event, value) => mainWindow.webContents.send('scale-ui-reset', value))
 
-menuBus.on('saveShot',
+ipcMain.on('saveShot',
   (event, data) => mainWindow.webContents.send('saveShot', data))
 ipcMain.on('insertShot',
   (event, data) => mainWindow.webContents.send('insertShot', data))
@@ -1735,10 +1667,4 @@ ipcMain.on('shot-generator:updateStore', (event, action) => {
   }
 })
 
-
-
-// ipc and menu
 ipcMain.on('registration:open', event => registration.show())
-menuBus.on('registration:open', event => registration.show())
-
-

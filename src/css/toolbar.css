@@ -385,9 +385,9 @@
 
 
 .toolbar-pomodoro-rest {
-  width: 85px;
+  /*width: 85px;*/
   display: flex;
-  justify-content: center;
+  /*justify-content: center;*/
   align-items: center;
 }
 
@@ -398,9 +398,45 @@
   align-items: center;
 }
 
+
+@keyframes pomodoroenabledDOM{
+  0% {
+    opacity: 0;
+    left: -15px;
+  }
+  100% {
+    opacity: 1;
+    left: 0px;
+    display: block;
+  }
+}
+
+@keyframes pomodorodisabledDOM{
+  0% {
+    opacity: 1;
+    left: 0px;
+  }
+  100% {
+    opacity: 0;
+    left: 15px;
+    margin-right: 0px;
+    width: 0px;
+    display: none;
+  }
+}
+
 .toolbar-pomodoro-running-status {
   color: #666;
-  margin-left: 7px;
+  /*margin-left: 7px;*/
+  margin-right: 7px;
+  position: relative;
+  animation: pomodorodisabledDOM 0.5s;
+  animation-fill-mode:forwards;
+}
+
+.toolbar-pomodoro-running-status.enable {
+  animation: pomodoroenabledDOM 0.5s;
+  animation-fill-mode:forwards;
 }
 
 

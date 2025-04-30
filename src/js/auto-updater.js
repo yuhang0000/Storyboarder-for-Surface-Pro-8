@@ -40,7 +40,7 @@ const init = () => {
         webPreferences: {
           nodeIntegration: true,
           devTools: true,
-          contextIsolation: false
+          enableRemoteModule: true
         }
       })
       win.on('closed', () => {

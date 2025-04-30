@@ -54,10 +54,9 @@ const show = async (onComplete) => {
       allowRunningInsecureContent: true,
       experimentalFeatures: true,
       backgroundThrottling: true,
-      contextIsolation: false
+      enableRemoteModule: true
     }
   })
-  require('@electron/remote/main').enable(win.webContents)
 
   // via https://github.com/electron/electron/blob/master/docs/api/web-contents.md#event-will-prevent-unload
   //     https://github.com/electron/electron/pull/9331
@@ -66,9 +65,9 @@ const show = async (onComplete) => {
   win.webContents.on('will-prevent-unload', event => {
     const choice = dialog.showMessageBoxSync({
       type: 'question',
-      buttons: ['Yes', 'No'],
-      title: 'Confirm',
-      message: 'Your scene is not saved. Are you sure you want to close Shot Generator?'
+      buttons: ['是', '否'],
+      title: '提示',
+      message: '您的场景尚未保存. 您确定要关闭辅助镜头吗?'
     })
 
     const leave = (choice === 0)

@@ -9,7 +9,7 @@ import { connect, useDispatch } from 'react-redux'
 import fs from 'fs-extra'
 import path from 'path'
 import { useTranslation } from 'react-i18next'
-const remote = require('@electron/remote')
+import { remote } from 'electron'
 import * as THREE from 'three'
 import { filter } from 'ramda'
 import { Machine, assign } from 'xstate'

@@ -2,7 +2,7 @@ const {shell, ipcRenderer} = require('electron')
 const EventEmitter = require('events').EventEmitter
 const Tether = require('tether')
 const PomodoroTimer = require('../pomodoro-timer')
-const prefsModule = require('@electron/remote').require('./prefs')
+const prefsModule = require('electron').remote.require('./prefs')
 const userDataHelper = require('../files/user-data-helper')
 const sfx = require('../wonderunit-sound')
 const moment = require('moment')
@@ -52,6 +52,7 @@ class PomodorTimerView extends EventEmitter {
       case "rest":
         break
       case "running":
+        // debugger;
         let remainingView = this.el.querySelector('#pomodoro-timer-remaining', true)
         remainingView.style.display = "inline-block"
         remainingView.innerHTML = data.remainingFriendly
@@ -68,16 +69,32 @@ class PomodorTimerView extends EventEmitter {
 
   transitionToState(newState) {
     let content
+    let texth //申明一个变量来存放文本高度
     switch(newState) {
       case "rest":
+        let ttt;
+        texth = this.innerEl.querySelector("[id='pomodoro-timer-minutes-input']");
+        if(texth != null){
+          texth = window.getComputedStyle(texth).getPropertyValue("height");
+          ttt = this.innerEl.querySelector("[id='pomodoro-timer-remaining']");
+          ttt = ttt.innerText;
+        }
+        else{
+          texth = "0; display: none;";
+          ttt = this.getStartTimeFriendly();
+        }
+        
         content = `
-          <h3 id="pomodoro-timer-title">Sketch Sprint</h3>
+          <h3 id="pomodoro-timer-title">记录延时快照</h3>
+          <div style="position: relative; wedth: 100%; display: flex; flex-wrap: nowrap; justify-content: center;">
+          <div id="pomodoro-timer-remaining" class="pomodoro-timer-remaining disable" style="height: ${texth}">${ttt}</div>
           <input id="pomodoro-timer-minutes-input" class="pomodoro-timer-minutes-input" type="number" id="minutesInput" value="${this.pomodoroTimerMinutes}" min="1" max="500">
-          <div id="pomodoro-timer-minutes-label">minutes</div>
-          <div id="pomodoro-timer-start-button" class="pomodoro-timer-button">
-            <div class="pomodoro-timer-button-copy">Start</div><svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon"><use xlink:href="./img/button-play-pause.svg#icon-play"></use></svg>
           </div>
-          <div id="pomodoro-timer-recordings-label">Latest Timelapses</div>
+          <div id="pomodoro-timer-minutes-label">分钟</div>
+          <div id="pomodoro-timer-start-button" class="pomodoro-timer-button">
+            <div class="pomodoro-timer-button-copy">开始</div><svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon"><use xlink:href="./img/button-play-pause.svg#icon-play"></use></svg>
+          </div>
+          <div id="pomodoro-timer-recordings-label">上一次的延时快照</div>
           <div id="pomodoro-timer-recordings">
           </div>
         `
@@ -108,15 +125,22 @@ class PomodorTimerView extends EventEmitter {
         this.updateRecordingsView()
         break
       case "running":
+        //强迫症犯了是吧, 这里统一文字高度, 以及加了点动画
+        texth = this.innerEl.querySelector("[id='pomodoro-timer-minutes-input']");
+        texth = window.getComputedStyle(texth).getPropertyValue("height");
+        
         content = `
-          <h3 id="pomodoro-timer-title">Sketch Sprint</h3>
-          <div id="pomodoro-timer-remaining" class="pomodoro-timer-remaining">${this.getStartTimeFriendly()}</div>
-          <div id="pomodoro-timer-minutes-label">minutes</div>
+          <h3 id="pomodoro-timer-title">记录延时快照</h3>
+          <div style="position: relative; wedth: 100%; display: flex; flex-wrap: nowrap; justify-content: center;">
+          <input id="pomodoro-timer-minutes-input" class="pomodoro-timer-minutes-input" type="number" id="minutesInput" value="${this.pomodoroTimerMinutes}" min="1" max="500" disabled="disabled">
+          <div id="pomodoro-timer-remaining" class="pomodoro-timer-remaining" style="height: ${texth}">${this.getStartTimeFriendly()}</div>
+          </div>
+          <div id="pomodoro-timer-minutes-label">倒计时</div>
           <div id="pomodoro-timer-cancel-button"  class="pomodoro-timer-button">
-            <div class="pomodoro-timer-button-copy">Cancel</div>
+            <div class="pomodoro-timer-button-copy">取消</div>
             <svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon"><use xlink:href="./img/button-play-pause.svg#icon-stop"></use></svg>
           </div>
-          <div id="pomodoro-timer-recordings-label">Latest Timelapses</div>
+          <div id="pomodoro-timer-recordings-label">上一次的延时快照</div>
           <div id="pomodoro-timer-recordings">
           </div>
         `
@@ -127,27 +151,27 @@ class PomodorTimerView extends EventEmitter {
           this.cancelTimer()
         })
         this.updateRecordingsView()
+        // debugger;
         break
       case "completed":
         content = `
-          <h3 id="pomodoro-timer-title">Sketch Sprint</h3>
+          <h3 id="pomodoro-timer-title">记录延时快照</h3>
           <div id="pomodoro-timer-success" class="pomodoro-timer-success">
             <div id="pomodoro-timer-success-headline">
-              U R<br/>
-              SMART!
+              完成啦!
             </div>
           </div>
           <div id="pomodoro-timer-recordings">
           </div>
           <div id="pomodoro-timer-success-message">
-            Or at least smarter than I am. (I'm a computer.) That's a great session you just had, and that's a great timelapse.
+            您辛苦啦, 一个人的努力总是充满挑战. (毕竟你是独自完成了这一切.) <br>你刚才的工作非常出色, 时间管理也非常棒. 祝贺你完美地完成了工作! <br>不妨把这份成果分享出去, 让更多人看到你的努力和成就吧!
           </div>
           <div id="pomodoro-timer-tweet-button"  class="pomodoro-timer-button">
-            <div class="pomodoro-timer-button-copy">Tweet</div>
+            <div class="pomodoro-timer-button-copy">Twtter</div>
             <svg id="pomodoro-timer-start-icon" class="pomodoro-timer-button-icon" style="height:25px; "><use xlink:href="./img/social.svg#icon-twitter"></use></svg>
           </div>
           <div id="pomodoro-timer-continue-button"  class="pomodoro-timer-button">
-            <div class="pomodoro-timer-button-copy">Continue</div>
+            <div class="pomodoro-timer-button-copy">完成</div>
           </div>
         `
         this.innerEl.innerHTML = content
@@ -198,7 +222,7 @@ class PomodorTimerView extends EventEmitter {
           shell.showItemInFolder(event.target.dataset.filepath)
         })
       }
-      this.el.querySelector('#pomodoro-timer-recordings-label').innerHTML = `Latest Timelapses`
+      this.el.querySelector('#pomodoro-timer-recordings-label').innerHTML = `上一次的延时快照`
       this.el.querySelector('#pomodoro-timer-recordings-label').style.display = `block`
     } else {
       this.el.querySelector('#pomodoro-timer-recordings-label').innerHTML = ``
@@ -217,7 +241,8 @@ class PomodorTimerView extends EventEmitter {
         let recordingImage = recordingImages[i]
         recordingImage.addEventListener('click', (event)=>{
           event.preventDefault()
-          shell.showItemInFolder(event.target.dataset.filepath)
+          // shell.showItemInFolder(event.target.dataset.filepath)
+          shell.openPath(recordingPath); //这里应该是直接打开文件, 而不是文件夹
         })
       }
     }
@@ -226,7 +251,7 @@ class PomodorTimerView extends EventEmitter {
   }
 
   attachTo (target) {
-    if (this.target !== target) {
+    if (this.target !== target && target != null) {
       if (this.tethered) {
         this.remove()
       }
@@ -267,17 +292,41 @@ class PomodorTimerView extends EventEmitter {
     this.fadeIn()
   }
 
-  fadeIn () {
+  fadeIn () { //获取焦点
     this.el.classList.add('is-visible')
-    this.innerEl.classList.add('appear-anim')
+    // this.innerEl.classList.add('appear-anim')
+    //手动纠正水平位置
+    let toolbar_pomodoro_rest_button = document.querySelector('#toolbar-pomodoro-rest');
+    // let www = window.getComputedStyle(toolbar_pomodoro_rest_button, null).width; //宽度
+    // www = www / 2;
+    // let lll = toolbar_pomodoro_rest_button.getBoundingClientRect().left;
+    // lll = lll + www;
+    // this.innerEl.style.left = "30px";
+    // let transform1 = this.innerEl.style.transform;
+    // transform1 = transform1.split(" ");
+    // let lll = Number(transform1[0].substring(transform1[0].indexOf("(")+1,transform1[0].indexOf("px"))) + 30;
+    // for(let aaaa of transform1){
+      // if(aaaa.indexOf("translateX") != null){
+        // lll = "translateX(" + lll + "px)";
+        // continue;
+      // }
+      // lll = lll + " " + aaaa;
+    // }
+    // this.innerEl.style.transform = lll;
+    // debugger;
+    
+    this.innerEl.classList.add('appear')
+    this.innerEl.classList.remove('disappear')
 
     tooltips.closeAll()
-    tooltips.setIgnore(document.querySelector('#toolbar-pomodoro-rest'), true)
+    tooltips.setIgnore(toolbar_pomodoro_rest_button, true)
   }
 
-  fadeOut () {
-    this.innerEl.classList.remove('appear-anim')
-    this.el.classList.remove('is-visible')
+  fadeOut () { //失去焦点
+    // this.innerEl.classList.remove('appear-anim')
+    this.innerEl.classList.remove('appear')
+    this.innerEl.classList.add('disappear')
+    // this.el.classList.remove('is-visible')
     tooltips.setIgnore(document.querySelector('#toolbar-pomodoro-rest'), false)
   }
 
@@ -325,7 +374,8 @@ class PomodorTimerView extends EventEmitter {
   }
 
   tweet() {
-    shell.openExternal('https://twitter.com/intent/tweet?text=' + encodeURIComponent('I just finished a sketch sprint with Storyboarder! #sketchsprint'))
+    //这里好像是推特分享连接欸
+    shell.openExternal('https://twitter.com/intent/tweet?text=' + encodeURIComponent('我刚刚用 StoryBoarder 完成了一份草图耶! #sketchsprint'))
   }
   
   getStartTimeFriendly() {

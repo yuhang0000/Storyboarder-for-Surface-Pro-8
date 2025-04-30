@@ -31,6 +31,46 @@
   float: left;
 }
 
+.pomodoro-timer.appear{
+  animation-name: appear;
+  pointer-events: auto;
+}
+
+.pomodoro-timer.disappear{
+  animation-name: disappear;
+  pointer-events: auto;
+}
+
+@keyframes appear {
+  0% {
+    visibility: visible;
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  80% {
+    transform: scale(1.015);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+    /*transform: scale(1);*/
+  }
+  /*20% {*/
+    /*transform: scale(1.015);*/
+  /*}*/
+  100% {
+    /*transform: scale(0.8);*/
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
 #pomodoro-timer.top-nub:after {
   bottom: 100%;
   left: 50%;
@@ -64,9 +104,9 @@
 }
 
 #pomodoro-timer-title {
-  font-size: 2em;
+  font-size: 1.5em;
   line-height: 1em;
-  margin: 1em 0 0 0;
+  margin: 0.5em 0 0 0;
   color: #999;
 }
 
@@ -76,7 +116,46 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
+@keyframes disabledDOM{
+  0%  {opacity: 1}
+  50%  {opacity: 0}
+  100%  {opacity: 0}
+}
+
+@keyframes enabledDOM{
+  0%  {opacity: 0}
+  50%  {opacity: 0}
+  100%  {opacity: 1}
+}
+
+.pomodoro-timer-minutes-input:disabled {
+  animation: disabledDOM 0.5s;
+  animation-fill-mode:forwards;
+  position: absolute;
+}
+
+/*我服了, :focus 和 :hover 发生冲突了, 😭😭😭*/
+.pomodoro-timer-minutes-input:focus:hover {
+  box-shadow: 0 0 0 2px #5b5b5bff;
+}
+
+.pomodoro-timer-minutes-input:focus {
+  box-shadow: 0 0 0 2px #5b5b5bff;
+}
+
+.pomodoro-timer-minutes-input:hover {
+  box-shadow: 0 0 0 2px #5b5b5b50;
+}
+
+.pomodoro-timer-remaining.disable {
+  animation: disabledDOM 0.5s;
+  animation-fill-mode:forwards;
+  position: absolute;
+}
+
 .pomodoro-timer-minutes-input {
+  animation: enabledDOM 0.5s;
+  animation-fill-mode:forwards;
   background: none;
   color: #aaa;
   border: none;
@@ -84,6 +163,13 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
   text-align: center;
   font-weight: bold;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px #5b5b5b00;
+  transition: box-shadow 0.2s
 }
 
 #pomodoro-timer-minutes-label {
@@ -92,13 +178,18 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .pomodoro-timer-remaining {
+  animation: enabledDOM 0.5s;
+  animation-fill-mode:forwards;
   font-size: 4em;
   font-weight: bold;
   color: #aaa;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding: 1px 2px;
 }
 
 .pomodoro-timer-success {
-  font-size: 4em;
+  font-size: 2em;
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -110,7 +201,7 @@ input[type=number]::-webkit-outer-spin-button {
 .pomodoro-timer-button {
   background: #3a3a3a;
   border-radius: 4px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   font-size: 1.25em;
   border-width: 0px;
   color: #aaa;
@@ -121,7 +212,7 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  transition: background 0.2s
 }
 
 .pomodoro-timer-button:hover {
